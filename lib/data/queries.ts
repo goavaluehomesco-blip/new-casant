@@ -245,13 +245,16 @@ export const getActiveTeamMembers = unstable_cache(
 async function _getCompanyInfo(): Promise<CompanyInfo | null> {
   const supabase = createUnauthenticatedClient()
   const { data, error } = await supabase.from("company_info").select("*").limit(1).single()
-  if (error) { console.error("Error fetching company info:", error); return null }
+  if (error) {
+    console.error("Error fetching company info:", error)
+    return null
+  }
   return data
 }
 export const getCompanyInfo = unstable_cache(
   _getCompanyInfo,
   ["company-info"],
-  { revalidate: 7200, tags: ["company-info"] }
+  { revalidate: 60, tags: ["company-info"] }
 )
 
 // Testimonials

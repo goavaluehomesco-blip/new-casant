@@ -1,6 +1,6 @@
 "use server"
 
-import { revalidatePath } from "next/cache"
+import { revalidatePath, revalidateTag } from "next/cache"
 
 export async function revalidateHeroSlides() {
   revalidatePath("/", "page")
@@ -8,6 +8,11 @@ export async function revalidateHeroSlides() {
 
 export async function revalidateServices() {
   revalidatePath("/", "page")
+}
+
+export async function revalidateCompanyInfo() {
+  revalidateTag("company-info")
+  revalidatePath("/", "layout")
 }
 
 export async function revalidateAll() {

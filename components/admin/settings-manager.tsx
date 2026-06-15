@@ -1,8 +1,9 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { createClient } from "@/lib/supabase/client"
+import { revalidateCompanyInfo } from "@/lib/actions/revalidate"
 import { Save, Building, Users, Share2, ImageIcon, Plus, Trash2, Globe } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -70,6 +71,34 @@ export default function SettingsManager({ companyInfo }: SettingsManagerProps) {
     maintenance_mode: companyInfo?.maintenance_mode ?? false,
   })
 
+  // Sync formData when companyInfo changes (after save and refresh)
+  useEffect(() => {
+    if (companyInfo) {
+      setFormData({
+        name: companyInfo.name || "Casant Events",
+        tagline: companyInfo.tagline || "",
+        about_short: companyInfo.about_short || "",
+        about_full: companyInfo.about_full || "",
+        years_experience: companyInfo.years_experience || 25,
+        clients_count: companyInfo.clients_count || 1000,
+        projects_count: companyInfo.projects_count || 1000,
+        hotels_count: companyInfo.hotels_count || 100,
+        email: companyInfo.email || "",
+        phone: companyInfo.phone || "",
+        address: companyInfo.address || "",
+        logo_url: companyInfo.logo_url || "",
+        divider_image_url: companyInfo.divider_image_url || "",
+        track_record_images: companyInfo.track_record_images || [],
+        social_facebook: companyInfo.social_facebook || "",
+        social_instagram: companyInfo.social_instagram || "",
+        social_linkedin: companyInfo.social_linkedin || "",
+        social_youtube: companyInfo.social_youtube || "",
+        inventory_hero_image_url: companyInfo.inventory_hero_image_url || "",
+        maintenance_mode: companyInfo.maintenance_mode ?? false,
+      })
+    }
+  }, [companyInfo?.id])
+
   const handleSubmit = async () => {
     const supabase = createClient()
     setIsLoading(true)
@@ -100,14 +129,18 @@ export default function SettingsManager({ companyInfo }: SettingsManagerProps) {
         maintenance_mode: formData.maintenance_mode,
       }
 
+      let hadError = false
+
       if (companyInfo?.id) {
         const { error } = await supabase.from("company_info").update(payload).eq("id", companyInfo.id)
         if (error) {
+          hadError = true
           // Column doesn't exist yet — fall back without the new columns and show a helpful message
           if (error.message?.includes("column") || error.code === "42703") {
             const { name, tagline, about_short, about_full, years_experience, clients_count, projects_count, hotels_count, email, phone, address, logo_url, social_facebook, social_instagram, social_linkedin, social_youtube } = payload
             const { error: fallbackError } = await supabase.from("company_info").update({ name, tagline, about_short, about_full, years_experience, clients_count, projects_count, hotels_count, email, phone, address, logo_url, social_facebook, social_instagram, social_linkedin, social_youtube }).eq("id", companyInfo.id)
             if (fallbackError) throw fallbackError
+            hadError = false
             setError("Saved (partial) — run the migration SQL in Supabase to enable Images & Site settings.")
           } else {
             throw error
@@ -118,10 +151,13 @@ export default function SettingsManager({ companyInfo }: SettingsManagerProps) {
         if (error) throw error
       }
 
-      if (!error) setError(null)
-      setSaved(true)
-      router.refresh()
-      setTimeout(() => setSaved(false), 3000)
+      if (!hadError) {
+        setError(null)
+        setSaved(true)
+        await revalidateCompanyInfo()
+        router.refresh()
+        setTimeout(() => setSaved(false), 3000)
+      }
     } catch (err: unknown) {
       const msg = err instanceof Error
         ? err.message
@@ -195,7 +231,10 @@ export default function SettingsManager({ companyInfo }: SettingsManagerProps) {
                     <Input
                       id="tagline"
                       value={formData.tagline}
-                      onChange={(e) => setFormData({ ...formData, tagline: e.target.value })}
+                      onChange={(e) => {
+                        console.log("[v0] Tagline changed from", formData.tagline, "to", e.target.value)
+                        setFormData({ ...formData, tagline: e.target.value })
+                      }}
                       placeholder="Creating Unforgettable Moments"
                     />
                   </div>
