@@ -8,7 +8,7 @@ export default async function AdminHrPage() {
   const supabase = await createClient()
 
   const [{ data: jobs }, { data: hrInfo }] = await Promise.all([
-    supabase.from("job_postings").select("id, title, department, location, type, description, requirements, is_active, display_order, created_at").order("display_order"),
+    supabase.from("job_postings").select("id, title, department, location, job_type, description, requirements, is_active, display_order, created_at, updated_at").order("display_order"),
     supabase.from("hr_info").select("*").limit(1).single(),
   ])
 

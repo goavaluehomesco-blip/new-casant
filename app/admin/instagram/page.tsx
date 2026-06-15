@@ -8,7 +8,7 @@ export default async function AdminInstagramPage() {
   const supabase = await createClient()
   const { data: posts } = await supabase
     .from("instagram_posts")
-    .select("id, image_url, caption, post_url, display_order, is_active")
+    .select("id, image_url, caption, post_url, display_order, is_active, created_at, updated_at")
     .order("display_order")
 
   return (
