@@ -19,11 +19,19 @@ export default async function AdminGalleryPage() {
       .limit(200),
   ])
 
+  const normalizedProjects = (projects || []).map((p) => ({
+    ...p,
+    gallery_categories: Array.isArray(p.gallery_categories)
+      ? (p.gallery_categories[0] ?? null)
+      : p.gallery_categories ?? null,
+    gallery_images: Array.isArray(p.gallery_images) ? p.gallery_images : [],
+  }))
+
   return (
     <div className="min-h-screen bg-slate-50">
       <AdminSidebar user={adminUser} unreadCount={unreadCount} />
       <div className="lg:pl-64">
-        <AllGalleryManager projects={projects || []} categories={categories || []} />
+        <AllGalleryManager projects={normalizedProjects} categories={categories || []} />
       </div>
     </div>
   )

@@ -8,7 +8,7 @@ export default async function AdminServicesPage() {
   const supabase = await createClient()
   const { data: services } = await supabase
     .from("services")
-    .select("id, title, description, icon, image_url, is_active, display_order")
+    .select("id, title, description, icon, image_url, link, is_active, display_order, created_at, updated_at")
     .order("display_order", { ascending: true })
 
   return (

@@ -12,7 +12,7 @@ export default async function AdminPage() {
     supabase.from("inventory_items").select("*", { count: "exact", head: true }),
     supabase
       .from("contact_submissions")
-      .select("id, name, email, phone, is_read, created_at")
+      .select("id, name, email, event_type, is_read, created_at")
       .order("created_at", { ascending: false })
       .limit(5),
   ])

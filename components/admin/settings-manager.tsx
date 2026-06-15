@@ -324,7 +324,6 @@ export default function SettingsManager({ companyInfo }: SettingsManagerProps) {
                   value={formData.inventory_hero_image_url}
                   onChange={(url) => setFormData({ ...formData, inventory_hero_image_url: url })}
                   folder="pages"
-                  aspectRatio="wide"
                   label="Inventory Hero Image"
                 />
               </CardContent>
@@ -340,7 +339,6 @@ export default function SettingsManager({ companyInfo }: SettingsManagerProps) {
                   value={formData.divider_image_url}
                   onChange={(url) => setFormData({ ...formData, divider_image_url: url })}
                   folder="branding"
-                  aspectRatio="wide"
                   label="Divider Image"
                 />
               </CardContent>
