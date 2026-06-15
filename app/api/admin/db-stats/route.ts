@@ -28,7 +28,8 @@ const TABLES = [
   "company_info",
 ]
 
-async function listBucketSize(sb: ReturnType<typeof createClient>, bucket: string, prefix = ""): Promise<number> {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function listBucketSize(sb: any, bucket: string, prefix = ""): Promise<number> {
   const { data, error } = await sb.storage.from(bucket).list(prefix, { limit: 1000 })
   if (error || !data) return 0
   let total = 0
