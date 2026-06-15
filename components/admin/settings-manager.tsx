@@ -77,37 +77,48 @@ export default function SettingsManager({ companyInfo }: SettingsManagerProps) {
     setError(null)
 
     try {
-      // Build payload and try to save maintenance_mode — if column doesn't exist yet it will be stripped
-      const { maintenance_mode, ...basePayload } = formData
-
-      // First attempt: full payload including maintenance_mode
-      const fullPayload = { ...basePayload, maintenance_mode }
+      // Only send columns that exist in company_info table
+      const payload = {
+        name: formData.name,
+        tagline: formData.tagline,
+        about_short: formData.about_short,
+        about_full: formData.about_full,
+        years_experience: formData.years_experience,
+        clients_count: formData.clients_count,
+        projects_count: formData.projects_count,
+        hotels_count: formData.hotels_count,
+        email: formData.email,
+        phone: formData.phone,
+        address: formData.address,
+        logo_url: formData.logo_url,
+        social_facebook: formData.social_facebook,
+        social_instagram: formData.social_instagram,
+        social_linkedin: formData.social_linkedin,
+        social_youtube: formData.social_youtube,
+        // TODO: Add these columns via Supabase SQL Editor, then uncomment:
+        // divider_image_url: formData.divider_image_url,
+        // track_record_images: formData.track_record_images,
+        // inventory_hero_image_url: formData.inventory_hero_image_url,
+        // maintenance_mode: formData.maintenance_mode,
+      }
 
       if (companyInfo?.id) {
-        const { error } = await supabase.from("company_info").update(fullPayload).eq("id", companyInfo.id)
-        if (error) {
-          console.log("[v0] Full update failed:", error.message, "— retrying without maintenance_mode")
-          // Column likely doesn't exist yet — fall back to base payload
-          const { error: fallbackError } = await supabase.from("company_info").update(basePayload).eq("id", companyInfo.id)
-          if (fallbackError) throw fallbackError
-        }
+        const { error } = await supabase.from("company_info").update(payload).eq("id", companyInfo.id)
+        if (error) throw error
       } else {
-        const { error } = await supabase.from("company_info").insert(fullPayload)
-        if (error) {
-          const { error: fallbackError } = await supabase.from("company_info").insert(basePayload)
-          if (fallbackError) throw fallbackError
-        }
+        const { error } = await supabase.from("company_info").insert(payload)
+        if (error) throw error
       }
 
       setSaved(true)
       router.refresh()
       setTimeout(() => setSaved(false), 3000)
     } catch (err: unknown) {
-      console.log("[v0] settings save error:", JSON.stringify(err))
       const msg = err instanceof Error
         ? err.message
-        : (err as { message?: string })?.message || JSON.stringify(err) || "Failed to save settings"
+        : (err as { message?: string })?.message || "Failed to save settings"
       setError(msg)
+      console.error("Error saving settings:", err)
     } finally {
       setIsLoading(false)
     }
