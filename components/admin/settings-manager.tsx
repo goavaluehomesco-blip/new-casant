@@ -77,21 +77,37 @@ export default function SettingsManager({ companyInfo }: SettingsManagerProps) {
     setError(null)
 
     try {
+      // Build payload and try to save maintenance_mode — if column doesn't exist yet it will be stripped
+      const { maintenance_mode, ...basePayload } = formData
+
+      // First attempt: full payload including maintenance_mode
+      const fullPayload = { ...basePayload, maintenance_mode }
+
       if (companyInfo?.id) {
-        const { error } = await supabase.from("company_info").update(formData).eq("id", companyInfo.id)
-        if (error) throw error
+        const { error } = await supabase.from("company_info").update(fullPayload).eq("id", companyInfo.id)
+        if (error) {
+          console.log("[v0] Full update failed:", error.message, "— retrying without maintenance_mode")
+          // Column likely doesn't exist yet — fall back to base payload
+          const { error: fallbackError } = await supabase.from("company_info").update(basePayload).eq("id", companyInfo.id)
+          if (fallbackError) throw fallbackError
+        }
       } else {
-        const { error } = await supabase.from("company_info").insert(formData)
-        if (error) throw error
+        const { error } = await supabase.from("company_info").insert(fullPayload)
+        if (error) {
+          const { error: fallbackError } = await supabase.from("company_info").insert(basePayload)
+          if (fallbackError) throw fallbackError
+        }
       }
 
       setSaved(true)
       router.refresh()
       setTimeout(() => setSaved(false), 3000)
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "Failed to save settings"
+      console.log("[v0] settings save error:", JSON.stringify(err))
+      const msg = err instanceof Error
+        ? err.message
+        : (err as { message?: string })?.message || JSON.stringify(err) || "Failed to save settings"
       setError(msg)
-      console.error("Error saving settings:", err)
     } finally {
       setIsLoading(false)
     }
