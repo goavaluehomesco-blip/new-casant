@@ -10,7 +10,7 @@ export default async function AdminCorporatePage() {
 
   const { data: category } = await supabase
     .from("gallery_categories")
-    .select("id, name, slug, description, display_order, is_active")
+    .select("id, name, slug, description, image_url, display_order, is_active")
     .eq("slug", "corporate")
     .single()
 

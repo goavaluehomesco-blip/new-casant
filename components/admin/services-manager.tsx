@@ -66,6 +66,7 @@ export default function ServicesManager({ services }: ServicesManagerProps) {
   const [editingService, setEditingService] = useState<Service | null>(null)
   const [deletingService, setDeletingService] = useState<Service | null>(null)
   const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   // Photos panel state
   const [photosService, setPhotosService] = useState<Service | null>(null)
@@ -167,6 +168,7 @@ export default function ServicesManager({ services }: ServicesManagerProps) {
   const handleSubmit = async () => {
     const supabase = createClient()
     setIsLoading(true)
+    setError(null)
     try {
       const data = {
         title: formData.title,
@@ -187,8 +189,10 @@ export default function ServicesManager({ services }: ServicesManagerProps) {
       setIsDialogOpen(false)
       resetForm()
       router.refresh()
-    } catch (error) {
-      console.error("Error saving service:", error)
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Failed to save service"
+      setError(msg)
+      console.error("Error saving service:", err)
     } finally {
       setIsLoading(false)
     }
@@ -204,8 +208,10 @@ export default function ServicesManager({ services }: ServicesManagerProps) {
       setIsDeleteDialogOpen(false)
       setDeletingService(null)
       router.refresh()
-    } catch (error) {
-      console.error("Error deleting service:", error)
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Failed to delete service"
+      setError(msg)
+      console.error("Error deleting service:", err)
     } finally {
       setIsLoading(false)
     }
@@ -448,8 +454,9 @@ export default function ServicesManager({ services }: ServicesManagerProps) {
               <Label>Active (visible on website)</Label>
             </div>
           </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => { setIsDialogOpen(false); resetForm() }}>Cancel</Button>
+          <DialogFooter className="flex-col items-stretch gap-2 sm:flex-row sm:items-center">
+            {error && <p className="text-sm text-red-600 flex-1">{error}</p>}
+            <Button variant="outline" onClick={() => { setIsDialogOpen(false); resetForm(); setError(null) }}>Cancel</Button>
             <Button
               onClick={handleSubmit}
               disabled={isLoading || !formData.title}

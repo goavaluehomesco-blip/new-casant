@@ -48,6 +48,7 @@ export default function HeroManager({ slides }: HeroManagerProps) {
   const [editingSlide, setEditingSlide] = useState<HeroSlide | null>(null)
   const [deletingSlide, setDeletingSlide] = useState<HeroSlide | null>(null)
   const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const [formData, setFormData] = useState({
     title: "",
@@ -94,6 +95,7 @@ export default function HeroManager({ slides }: HeroManagerProps) {
   const handleSubmit = async () => {
     const supabase = createClient()
     setIsLoading(true)
+    setError(null)
 
     try {
       const data = {
@@ -108,14 +110,12 @@ export default function HeroManager({ slides }: HeroManagerProps) {
 
       if (editingSlide) {
         const { error } = await supabase.from("hero_slides").update(data).eq("id", editingSlide.id)
-
         if (error) throw error
       } else {
         const { error } = await supabase.from("hero_slides").insert({
           ...data,
           display_order: slides.length,
         })
-
         if (error) throw error
       }
 
@@ -123,8 +123,10 @@ export default function HeroManager({ slides }: HeroManagerProps) {
       resetForm()
       await revalidateHeroSlides()
       router.refresh()
-    } catch (error) {
-      console.error("Error saving slide:", error)
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Failed to save slide"
+      setError(msg)
+      console.error("Error saving slide:", err)
     } finally {
       setIsLoading(false)
     }
@@ -145,8 +147,10 @@ export default function HeroManager({ slides }: HeroManagerProps) {
       setDeletingSlide(null)
       await revalidateHeroSlides()
       router.refresh()
-    } catch (error) {
-      console.error("Error deleting slide:", error)
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Failed to delete slide"
+      setError(msg)
+      console.error("Error deleting slide:", err)
     } finally {
       setIsLoading(false)
     }
@@ -320,12 +324,16 @@ export default function HeroManager({ slides }: HeroManagerProps) {
               <Label>Active (visible on website)</Label>
             </div>
           </div>
-          <DialogFooter>
+          <DialogFooter className="flex-col items-stretch gap-2 sm:flex-row sm:items-center">
+            {error && (
+              <p className="text-sm text-red-600 flex-1">{error}</p>
+            )}
             <Button
               variant="outline"
               onClick={() => {
                 setIsDialogOpen(false)
                 resetForm()
+                setError(null)
               }}
             >
               Cancel

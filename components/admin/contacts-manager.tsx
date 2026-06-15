@@ -40,12 +40,13 @@ interface ContactsManagerProps {
 export default function ContactsManager({ contacts }: ContactsManagerProps) {
   const router = useRouter()
   const [filter, setFilter] = useState<"all" | "unread" | "archived">("all")
+  const [localContacts, setLocalContacts] = useState<Contact[]>(contacts)
   const [selectedContact, setSelectedContact] = useState<Contact | null>(null)
   const [deletingContact, setDeletingContact] = useState<Contact | null>(null)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
-  const filteredContacts = contacts.filter((contact) => {
+  const filteredContacts = localContacts.filter((contact) => {
     if (filter === "unread") return !contact.is_read && !contact.is_archived
     if (filter === "archived") return contact.is_archived
     return !contact.is_archived
@@ -57,13 +58,17 @@ export default function ContactsManager({ contacts }: ContactsManagerProps) {
     const supabase = createClient()
     await supabase.from("contact_submissions").update({ is_read: true }).eq("id", contact.id)
 
+    setLocalContacts((prev) => prev.map((c) => c.id === contact.id ? { ...c, is_read: true } : c))
+    setSelectedContact((prev) => prev?.id === contact.id ? { ...prev, is_read: true } : prev)
     router.refresh()
   }
 
   const toggleArchive = async (contact: Contact) => {
     const supabase = createClient()
-    await supabase.from("contact_submissions").update({ is_archived: !contact.is_archived }).eq("id", contact.id)
+    const newArchived = !contact.is_archived
+    await supabase.from("contact_submissions").update({ is_archived: newArchived }).eq("id", contact.id)
 
+    setLocalContacts((prev) => prev.map((c) => c.id === contact.id ? { ...c, is_archived: newArchived } : c))
     setSelectedContact(null)
     router.refresh()
   }
@@ -79,12 +84,13 @@ export default function ContactsManager({ contacts }: ContactsManagerProps) {
 
       if (error) throw error
 
+      setLocalContacts((prev) => prev.filter((c) => c.id !== deletingContact.id))
       setIsDeleteDialogOpen(false)
       setDeletingContact(null)
       setSelectedContact(null)
       router.refresh()
-    } catch (error) {
-      console.error("Error deleting contact:", error)
+    } catch (err) {
+      console.error("Error deleting contact:", err)
     } finally {
       setIsLoading(false)
     }
@@ -95,8 +101,8 @@ export default function ContactsManager({ contacts }: ContactsManagerProps) {
     await markAsRead(contact)
   }
 
-  const unreadCount = contacts.filter((c) => !c.is_read && !c.is_archived).length
-  const archivedCount = contacts.filter((c) => c.is_archived).length
+  const unreadCount = localContacts.filter((c) => !c.is_read && !c.is_archived).length
+  const archivedCount = localContacts.filter((c) => c.is_archived).length
 
   return (
     <div className="p-6 max-w-4xl mx-auto">

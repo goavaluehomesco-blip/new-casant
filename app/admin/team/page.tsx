@@ -8,7 +8,7 @@ export default async function AdminTeamPage() {
   const supabase = await createClient()
   const { data: teamMembers } = await supabase
     .from("team_members")
-    .select("id, name, role, bio, image_url, display_order, is_active")
+    .select("id, name, role, bio, image_url, email, phone, linkedin, display_order, is_active")
     .order("display_order")
 
   return (

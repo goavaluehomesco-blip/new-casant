@@ -43,6 +43,7 @@ export default function SettingsManager({ companyInfo }: SettingsManagerProps) {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
   const [saved, setSaved] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const [formData, setFormData] = useState({
     name: companyInfo?.name || "Casant Events",
@@ -70,23 +71,24 @@ export default function SettingsManager({ companyInfo }: SettingsManagerProps) {
     const supabase = createClient()
     setIsLoading(true)
     setSaved(false)
+    setError(null)
 
     try {
       if (companyInfo?.id) {
         const { error } = await supabase.from("company_info").update(formData).eq("id", companyInfo.id)
-
         if (error) throw error
       } else {
         const { error } = await supabase.from("company_info").insert(formData)
-
         if (error) throw error
       }
 
       setSaved(true)
       router.refresh()
       setTimeout(() => setSaved(false), 3000)
-    } catch (error) {
-      console.error("Error saving settings:", error)
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Failed to save settings"
+      setError(msg)
+      console.error("Error saving settings:", err)
     } finally {
       setIsLoading(false)
     }
@@ -99,10 +101,13 @@ export default function SettingsManager({ companyInfo }: SettingsManagerProps) {
           <h1 className="text-2xl font-bold text-slate-800">Company Settings</h1>
           <p className="text-slate-500">Manage your company information and branding</p>
         </div>
-        <Button onClick={handleSubmit} disabled={isLoading} className="bg-blue-600 hover:bg-blue-700">
-          <Save className="w-4 h-4 mr-2" />
-          {isLoading ? "Saving..." : saved ? "Saved!" : "Save Changes"}
-        </Button>
+        <div className="flex flex-col items-end gap-1">
+          {error && <p className="text-sm text-red-600">{error}</p>}
+          <Button onClick={handleSubmit} disabled={isLoading} className="bg-blue-600 hover:bg-blue-700">
+            <Save className="w-4 h-4 mr-2" />
+            {isLoading ? "Saving..." : saved ? "Saved!" : "Save Changes"}
+          </Button>
+        </div>
       </div>
 
       <Tabs defaultValue="general" className="space-y-6">

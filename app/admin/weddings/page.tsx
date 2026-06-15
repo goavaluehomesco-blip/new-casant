@@ -9,13 +9,13 @@ export default async function AdminWeddingsPage() {
 
   const { data: category } = await supabase
     .from("gallery_categories")
-    .select("id, name, slug, description, display_order, is_active")
+    .select("id, name, slug, description, image_url, display_order, is_active")
     .eq("slug", "weddings")
     .single()
 
   const { data: projects } = await supabase
     .from("gallery_projects")
-    .select("id, title, slug, description, cover_image_url, category_id, is_featured, is_active, display_order, created_at, gallery_images(id, image_url, caption, display_order)")
+    .select("id, title, slug, description, cover_image, location, event_date, category_id, is_featured, is_active, display_order, created_at, gallery_images(id, image_url, caption, display_order)")
     .eq("category_id", category?.id)
     .order("display_order")
     .limit(200)
