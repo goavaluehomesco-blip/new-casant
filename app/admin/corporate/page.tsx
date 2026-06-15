@@ -1,6 +1,5 @@
 import { createClient } from "@/lib/supabase/server"
 import { requireAdminSession } from "@/lib/admin/session"
-import { GalleryProject } from "@/lib/data/types"
 import AdminSidebar from "@/components/admin/admin-sidebar"
 import GalleryManager from "@/components/admin/gallery-manager"
 
@@ -21,10 +20,18 @@ export default async function AdminCorporatePage() {
     .order("display_order")
     .limit(200)
 
-  const projects: GalleryProject[] = (projectsData || []).map((p: any) => ({
-    ...p,
-    images: p.gallery_images || [],
-    updated_at: p.created_at,
+  const projects = (projectsData || []).map((p) => ({
+    id: p.id,
+    title: p.title,
+    slug: p.slug,
+    description: p.description,
+    location: p.location,
+    event_date: p.event_date,
+    cover_image: p.cover_image,
+    is_featured: p.is_featured,
+    is_active: p.is_active,
+    display_order: p.display_order,
+    gallery_images: Array.isArray(p.gallery_images) ? p.gallery_images : [],
   }))
 
   return (

@@ -66,7 +66,7 @@ async function _getGalleryCategories(): Promise<GalleryCategory[]> {
   const supabase = createUnauthenticatedClient()
   const { data, error } = await supabase
     .from("gallery_categories")
-    .select("id, name, slug, description, display_order, is_active")
+    .select("id, name, slug, description, image_url, display_order, is_active, created_at, updated_at")
     .eq("is_active", true)
     .order("display_order", { ascending: true })
   if (error) { console.error("Error fetching gallery categories:", error); return [] }
@@ -82,7 +82,7 @@ export async function getGalleryCategoryBySlug(slug: string): Promise<GalleryCat
   const supabase = createUnauthenticatedClient()
   const { data, error } = await supabase
     .from("gallery_categories")
-    .select("id, name, slug, description, display_order, is_active")
+    .select("id, name, slug, description, image_url, display_order, is_active, created_at, updated_at")
     .eq("slug", slug)
     .single()
   if (error) { console.error("Error fetching gallery category:", error); return null }
@@ -94,7 +94,7 @@ async function _getFeaturedProjects(): Promise<GalleryProject[]> {
   const supabase = createUnauthenticatedClient()
   const { data, error } = await supabase
     .from("gallery_projects")
-    .select("id, title, slug, description, cover_image_url, category_id, is_featured, is_active, display_order, created_at")
+    .select("id, title, slug, description, cover_image, location, event_date, category_id, is_featured, is_active, display_order, created_at, updated_at")
     .eq("is_featured", true)
     .eq("is_active", true)
     .order("created_at", { ascending: false })
@@ -112,7 +112,7 @@ export async function getProjectsByCategory(categoryId: string): Promise<Gallery
   const supabase = createUnauthenticatedClient()
   const { data, error } = await supabase
     .from("gallery_projects")
-    .select("id, title, slug, description, cover_image_url, category_id, is_featured, is_active, display_order, created_at, images:gallery_images(id, image_url, caption, display_order)")
+    .select("id, title, slug, description, cover_image, location, event_date, category_id, is_featured, is_active, display_order, created_at, updated_at, images:gallery_images(id, image_url, caption, display_order)")
     .eq("category_id", categoryId)
     .eq("is_active", true)
     .order("display_order", { ascending: true })
@@ -131,7 +131,7 @@ export async function getProjectsByCategorySlug(slug: string): Promise<GalleryPr
   if (catError || !category) { console.error("Error fetching category:", catError); return [] }
   const { data, error } = await supabase
     .from("gallery_projects")
-    .select("id, title, slug, description, cover_image_url, category_id, is_featured, is_active, display_order, created_at, images:gallery_images(id, image_url, caption, display_order)")
+    .select("id, title, slug, description, cover_image, location, event_date, category_id, is_featured, is_active, display_order, created_at, updated_at, images:gallery_images(id, image_url, caption, display_order)")
     .eq("category_id", category.id)
     .eq("is_active", true)
     .order("display_order", { ascending: true })
@@ -144,11 +144,11 @@ export async function getProjectBySlug(slug: string): Promise<GalleryProject | n
   const supabase = createUnauthenticatedClient()
   const { data, error } = await supabase
     .from("gallery_projects")
-    .select("*, images:gallery_images(id, image_url, caption, display_order)")
+    .select("id, title, slug, description, cover_image, location, event_date, category_id, is_featured, is_active, display_order, created_at, updated_at, images:gallery_images(id, image_url, caption, display_order)")
     .eq("slug", slug)
     .single()
   if (error) { console.error("Error fetching project by slug:", error); return null }
-  return data
+  return data as GalleryProject
 }
 
 export async function getAllFeaturedImages(): Promise<(GalleryImage & { project: GalleryProject })[]> {
@@ -169,7 +169,7 @@ async function _getInventoryCategories(): Promise<InventoryCategory[]> {
   const supabase = createUnauthenticatedClient()
   const { data, error } = await supabase
     .from("inventory_categories")
-    .select("id, name, slug, description, icon, display_order, is_active")
+    .select("id, name, slug, description, icon, display_order, is_active, created_at, updated_at")
     .eq("is_active", true)
     .order("display_order", { ascending: true })
   if (error) { console.error("Error fetching inventory categories:", error); return [] }
@@ -185,7 +185,7 @@ export async function getInventoryItems(): Promise<InventoryItem[]> {
   const supabase = createUnauthenticatedClient()
   const { data, error } = await supabase
     .from("inventory_items")
-    .select("id, name, description, category_id, image_url, quantity, is_available, is_active, display_order")
+    .select("id, name, description, category_id, image_url, specifications, quantity, is_available, is_active, display_order, created_at, updated_at")
     .eq("is_available", true)
     .eq("is_active", true)
     .order("display_order", { ascending: true })
@@ -205,7 +205,7 @@ async function _getInventoryByCategory(): Promise<Record<string, InventoryItem[]
 
   const { data: items, error: itemsError } = await supabase
     .from("inventory_items")
-    .select("id, name, description, category_id, image_url, quantity, is_available, is_active, display_order")
+    .select("id, name, description, category_id, image_url, specifications, quantity, is_available, is_active, display_order, created_at, updated_at")
     .eq("is_available", true)
     .eq("is_active", true)
     .order("display_order", { ascending: true })

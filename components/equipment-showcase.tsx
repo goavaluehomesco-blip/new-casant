@@ -23,22 +23,22 @@ const defaultCategories: InventoryCategory[] = [
 
 const defaultInventory: Record<string, InventoryItem[]> = {
   lights: [
-    { id: "l1", category_id: "1", name: "LED Par Lights", description: "High-output RGBWA+UV par lights", image_url: null, specifications: [], quantity: 50, is_available: true, is_active: true, display_order: 1, created_at: "", updated_at: "" },
-    { id: "l2", category_id: "1", name: "Moving Head Spots", description: "350W moving head fixtures", image_url: null, specifications: [], quantity: 30, is_available: true, is_active: true, display_order: 2, created_at: "", updated_at: "" },
-    { id: "l3", category_id: "1", name: "LED Wall Washers", description: "Linear LED wash fixtures", image_url: null, specifications: [], quantity: 40, is_available: true, is_active: true, display_order: 3, created_at: "", updated_at: "" },
-    { id: "l4", category_id: "1", name: "Follow Spots", description: "1200W HMI follow spotlights", image_url: null, specifications: [], quantity: 8, is_available: true, is_active: true, display_order: 4, created_at: "", updated_at: "" },
+    { id: "l1", category_id: "1", name: "LED Par Lights", description: "High-output RGBWA+UV par lights", image_url: null, specifications: null, quantity: 50, is_available: true, is_active: true, display_order: 1, created_at: "", updated_at: "" },
+    { id: "l2", category_id: "1", name: "Moving Head Spots", description: "350W moving head fixtures", image_url: null, specifications: null, quantity: 30, is_available: true, is_active: true, display_order: 2, created_at: "", updated_at: "" },
+    { id: "l3", category_id: "1", name: "LED Wall Washers", description: "Linear LED wash fixtures", image_url: null, specifications: null, quantity: 40, is_available: true, is_active: true, display_order: 3, created_at: "", updated_at: "" },
+    { id: "l4", category_id: "1", name: "Follow Spots", description: "1200W HMI follow spotlights", image_url: null, specifications: null, quantity: 8, is_available: true, is_active: true, display_order: 4, created_at: "", updated_at: "" },
   ],
   sound: [
-    { id: "s1", category_id: "2", name: "Line Array Systems", description: "JBL VTX large-format arrays", image_url: null, specifications: [], quantity: 10, is_available: true, is_active: true, display_order: 1, created_at: "", updated_at: "" },
-    { id: "s2", category_id: "2", name: "Subwoofers", description: "Dual 18\" 2000W subwoofers", image_url: null, specifications: [], quantity: 12, is_available: true, is_active: true, display_order: 2, created_at: "", updated_at: "" },
-    { id: "s3", category_id: "2", name: "Digital Mixing Consoles", description: "96-channel digital consoles", image_url: null, specifications: [], quantity: 5, is_available: true, is_active: true, display_order: 3, created_at: "", updated_at: "" },
-    { id: "s4", category_id: "2", name: "Wireless Microphones", description: "Digital UHF wireless systems", image_url: null, specifications: [], quantity: 50, is_available: true, is_active: true, display_order: 4, created_at: "", updated_at: "" },
+    { id: "s1", category_id: "2", name: "Line Array Systems", description: "JBL VTX large-format arrays", image_url: null, specifications: null, quantity: 10, is_available: true, is_active: true, display_order: 1, created_at: "", updated_at: "" },
+    { id: "s2", category_id: "2", name: "Subwoofers", description: "Dual 18\" 2000W subwoofers", image_url: null, specifications: null, quantity: 12, is_available: true, is_active: true, display_order: 2, created_at: "", updated_at: "" },
+    { id: "s3", category_id: "2", name: "Digital Mixing Consoles", description: "96-channel digital consoles", image_url: null, specifications: null, quantity: 5, is_available: true, is_active: true, display_order: 3, created_at: "", updated_at: "" },
+    { id: "s4", category_id: "2", name: "Wireless Microphones", description: "Digital UHF wireless systems", image_url: null, specifications: null, quantity: 50, is_available: true, is_active: true, display_order: 4, created_at: "", updated_at: "" },
   ],
   production: [
-    { id: "p1", category_id: "3", name: "LED Video Walls", description: "P2.9 & P3.9 modular LED displays", image_url: null, specifications: [], quantity: 200, is_available: true, is_active: true, display_order: 1, created_at: "", updated_at: "" },
-    { id: "p2", category_id: "3", name: "Staging Systems", description: "Modular aluminium stage platforms", image_url: null, specifications: [], quantity: 100, is_available: true, is_active: true, display_order: 2, created_at: "", updated_at: "" },
-    { id: "p3", category_id: "3", name: "Truss Systems", description: "Box & triangle aluminium truss", image_url: null, specifications: [], quantity: 300, is_available: true, is_active: true, display_order: 3, created_at: "", updated_at: "" },
-    { id: "p4", category_id: "3", name: "Special Effects", description: "CO2 jets, confetti & cold spark", image_url: null, specifications: [], quantity: 20, is_available: true, is_active: true, display_order: 4, created_at: "", updated_at: "" },
+    { id: "p1", category_id: "3", name: "LED Video Walls", description: "P2.9 & P3.9 modular LED displays", image_url: null, specifications: null, quantity: 200, is_available: true, is_active: true, display_order: 1, created_at: "", updated_at: "" },
+    { id: "p2", category_id: "3", name: "Staging Systems", description: "Modular aluminium stage platforms", image_url: null, specifications: null, quantity: 100, is_available: true, is_active: true, display_order: 2, created_at: "", updated_at: "" },
+    { id: "p3", category_id: "3", name: "Truss Systems", description: "Box & triangle aluminium truss", image_url: null, specifications: null, quantity: 300, is_available: true, is_active: true, display_order: 3, created_at: "", updated_at: "" },
+    { id: "p4", category_id: "3", name: "Special Effects", description: "CO2 jets, confetti & cold spark", image_url: null, specifications: null, quantity: 20, is_available: true, is_active: true, display_order: 4, created_at: "", updated_at: "" },
   ],
 }
 
