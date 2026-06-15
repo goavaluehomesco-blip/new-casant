@@ -77,7 +77,6 @@ export default function SettingsManager({ companyInfo }: SettingsManagerProps) {
     setError(null)
 
     try {
-      // Only send columns that exist in company_info table
       const payload = {
         name: formData.name,
         tagline: formData.tagline,
@@ -95,21 +94,31 @@ export default function SettingsManager({ companyInfo }: SettingsManagerProps) {
         social_instagram: formData.social_instagram,
         social_linkedin: formData.social_linkedin,
         social_youtube: formData.social_youtube,
-        // TODO: Add these columns via Supabase SQL Editor, then uncomment:
-        // divider_image_url: formData.divider_image_url,
-        // track_record_images: formData.track_record_images,
-        // inventory_hero_image_url: formData.inventory_hero_image_url,
-        // maintenance_mode: formData.maintenance_mode,
+        divider_image_url: formData.divider_image_url,
+        track_record_images: formData.track_record_images,
+        inventory_hero_image_url: formData.inventory_hero_image_url,
+        maintenance_mode: formData.maintenance_mode,
       }
 
       if (companyInfo?.id) {
         const { error } = await supabase.from("company_info").update(payload).eq("id", companyInfo.id)
-        if (error) throw error
+        if (error) {
+          // Column doesn't exist yet — fall back without the new columns and show a helpful message
+          if (error.message?.includes("column") || error.code === "42703") {
+            const { name, tagline, about_short, about_full, years_experience, clients_count, projects_count, hotels_count, email, phone, address, logo_url, social_facebook, social_instagram, social_linkedin, social_youtube } = payload
+            const { error: fallbackError } = await supabase.from("company_info").update({ name, tagline, about_short, about_full, years_experience, clients_count, projects_count, hotels_count, email, phone, address, logo_url, social_facebook, social_instagram, social_linkedin, social_youtube }).eq("id", companyInfo.id)
+            if (fallbackError) throw fallbackError
+            setError("Saved (partial) — run the migration SQL in Supabase to enable Images & Site settings.")
+          } else {
+            throw error
+          }
+        }
       } else {
         const { error } = await supabase.from("company_info").insert(payload)
         if (error) throw error
       }
 
+      if (!error) setError(null)
       setSaved(true)
       router.refresh()
       setTimeout(() => setSaved(false), 3000)
@@ -118,7 +127,7 @@ export default function SettingsManager({ companyInfo }: SettingsManagerProps) {
         ? err.message
         : (err as { message?: string })?.message || "Failed to save settings"
       setError(msg)
-      console.error("Error saving settings:", err)
+      setSaved(false)
     } finally {
       setIsLoading(false)
     }
