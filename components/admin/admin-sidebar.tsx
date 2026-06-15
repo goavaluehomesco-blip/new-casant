@@ -20,6 +20,7 @@ import {
   Briefcase,
   Layers,
   Images,
+  DatabaseZap,
 } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 
@@ -44,6 +45,7 @@ const menuItems = [
   { icon: Instagram, label: "Instagram", href: "/admin/instagram" },
   { icon: Briefcase, label: "Careers / HR", href: "/admin/hr" },
   { icon: MessageSquare, label: "Contact Submissions", href: "/admin/contacts", badge: true },
+  { icon: DatabaseZap, label: "Database Monitor", href: "/admin/database" },
   { icon: Settings, label: "Company Settings", href: "/admin/settings" },
 ]
 

@@ -1,5 +1,6 @@
 import type React from "react"
 import { Inter } from "next/font/google"
+import StorageWarningBanner from "@/components/admin/storage-warning-banner"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -13,5 +14,10 @@ export default function AdminLayout({
 }: {
   children: React.ReactNode
 }) {
-  return <div className={`${inter.className} min-h-screen bg-slate-100`}>{children}</div>
+  return (
+    <div className={`${inter.className} min-h-screen bg-slate-100`}>
+      <StorageWarningBanner />
+      {children}
+    </div>
+  )
 }
