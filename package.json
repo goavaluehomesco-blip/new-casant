@@ -9,9 +9,8 @@
     "start": "next start"
   },
   "dependencies": {
-    "ai": "^6.0.0",
-    "@ai-sdk/react": "^3.0.0",
     "@ai-sdk/groq": "^1.0.0",
+    "@ai-sdk/react": "^3.0.0",
     "@hookform/resolvers": "^3.10.0",
     "@radix-ui/react-accordion": "1.2.2",
     "@radix-ui/react-alert-dialog": "1.1.4",
@@ -42,7 +41,9 @@
     "@radix-ui/react-tooltip": "1.1.6",
     "@supabase/ssr": "0.8.0",
     "@supabase/supabase-js": "latest",
+    "@types/pg": "^8.20.0",
     "@vercel/analytics": "1.3.1",
+    "ai": "^6.0.0",
     "autoprefixer": "^10.4.20",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -53,6 +54,7 @@
     "lucide-react": "^0.454.0",
     "next": "16.0.10",
     "next-themes": "^0.4.6",
+    "pg": "^8.21.0",
     "react": "19.2.0",
     "react-day-picker": "9.8.0",
     "react-dom": "19.2.0",
