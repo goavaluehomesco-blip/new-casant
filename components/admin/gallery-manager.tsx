@@ -78,6 +78,7 @@ export default function GalleryManager({
   const [managingImagesProject, setManagingImagesProject] = useState<Project | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [isCategorySaving, setIsCategorySaving] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   // Category banner state
   const [categoryData, setCategoryData] = useState({
@@ -157,6 +158,7 @@ export default function GalleryManager({
   const handleSubmit = async () => {
     const supabase = createClient()
     setIsLoading(true)
+    setError(null)
     try {
       const slug = generateSlug(formData.title)
       const data = {
@@ -183,8 +185,10 @@ export default function GalleryManager({
       setIsDialogOpen(false)
       resetForm()
       router.refresh()
-    } catch (error) {
-      console.error("Error saving project:", error)
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Failed to save project"
+      setError(msg)
+      console.error("Error saving project:", err)
     } finally {
       setIsLoading(false)
     }
@@ -200,8 +204,10 @@ export default function GalleryManager({
       setIsDeleteDialogOpen(false)
       setDeletingProject(null)
       router.refresh()
-    } catch (error) {
-      console.error("Error deleting project:", error)
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Failed to delete project"
+      setError(msg)
+      console.error("Error deleting project:", err)
     } finally {
       setIsLoading(false)
     }
@@ -228,8 +234,10 @@ export default function GalleryManager({
         .single()
       if (updatedProject) setManagingImagesProject(updatedProject)
       router.refresh()
-    } catch (error) {
-      console.error("Error adding image:", error)
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Failed to add image"
+      setError(msg)
+      console.error("Error adding image:", err)
     } finally {
       setIsLoading(false)
     }
@@ -247,8 +255,10 @@ export default function GalleryManager({
         })
       }
       router.refresh()
-    } catch (error) {
-      console.error("Error deleting image:", error)
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Failed to delete image"
+      setError(msg)
+      console.error("Error deleting image:", err)
     }
   }
 
@@ -491,8 +501,9 @@ export default function GalleryManager({
               </div>
             </div>
           </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => { setIsDialogOpen(false); resetForm() }}>Cancel</Button>
+          <DialogFooter className="flex-col items-stretch gap-2 sm:flex-row sm:items-center">
+            {error && <p className="text-sm text-red-600 flex-1">{error}</p>}
+            <Button variant="outline" onClick={() => { setIsDialogOpen(false); resetForm(); setError(null) }}>Cancel</Button>
             <Button onClick={handleSubmit} disabled={isLoading || !formData.title} className="bg-blue-600 hover:bg-blue-700">
               <Save className="w-4 h-4 mr-2" />
               {isLoading ? "Saving..." : "Save Event Group"}

@@ -129,6 +129,7 @@ export interface CompanyInfo {
   social_linkedin: string | null
   social_youtube: string | null
   inventory_hero_image_url: string | null
+  maintenance_mode: boolean
   created_at: string
   updated_at: string
 }

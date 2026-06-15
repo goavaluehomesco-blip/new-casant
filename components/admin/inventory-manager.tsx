@@ -73,6 +73,7 @@ export default function InventoryManager({ categories, items }: InventoryManager
   const [editingItem, setEditingItem] = useState<InventoryItem | null>(null)
   const [deletingItem, setDeletingItem] = useState<InventoryItem | null>(null)
   const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const [formData, setFormData] = useState({
     name: "",
@@ -144,6 +145,7 @@ export default function InventoryManager({ categories, items }: InventoryManager
   const handleSubmit = async () => {
     const supabase = createClient()
     setIsLoading(true)
+    setError(null)
 
     try {
       const data = {
@@ -159,19 +161,19 @@ export default function InventoryManager({ categories, items }: InventoryManager
 
       if (editingItem) {
         const { error } = await supabase.from("inventory_items").update(data).eq("id", editingItem.id)
-
         if (error) throw error
       } else {
         const { error } = await supabase.from("inventory_items").insert(data)
-
         if (error) throw error
       }
 
       setIsDialogOpen(false)
       resetForm()
       router.refresh()
-    } catch (error) {
-      console.error("Error saving item:", error)
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Failed to save item"
+      setError(msg)
+      console.error("Error saving item:", err)
     } finally {
       setIsLoading(false)
     }
@@ -191,8 +193,10 @@ export default function InventoryManager({ categories, items }: InventoryManager
       setIsDeleteDialogOpen(false)
       setDeletingItem(null)
       router.refresh()
-    } catch (error) {
-      console.error("Error deleting item:", error)
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Failed to delete item"
+      setError(msg)
+      console.error("Error deleting item:", err)
     } finally {
       setIsLoading(false)
     }
@@ -424,12 +428,14 @@ export default function InventoryManager({ categories, items }: InventoryManager
               </div>
             </div>
           </div>
-          <DialogFooter>
+          <DialogFooter className="flex-col items-stretch gap-2 sm:flex-row sm:items-center">
+            {error && <p className="text-sm text-red-600 flex-1">{error}</p>}
             <Button
               variant="outline"
               onClick={() => {
                 setIsDialogOpen(false)
                 resetForm()
+                setError(null)
               }}
             >
               Cancel

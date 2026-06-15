@@ -3,11 +3,12 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { createClient } from "@/lib/supabase/client"
-import { Save, Building, Users, Share2, ImageIcon, Plus, Trash2 } from "lucide-react"
+import { Save, Building, Users, Share2, ImageIcon, Plus, Trash2, Globe } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
+import { Checkbox } from "@/components/ui/checkbox"
 import ImageUpload from "@/components/admin/image-upload"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -33,6 +34,7 @@ interface CompanyInfo {
   social_linkedin: string | null
   social_youtube: string | null
   inventory_hero_image_url: string | null
+  maintenance_mode: boolean | null
 }
 
 interface SettingsManagerProps {
@@ -43,6 +45,7 @@ export default function SettingsManager({ companyInfo }: SettingsManagerProps) {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
   const [saved, setSaved] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const [formData, setFormData] = useState({
     name: companyInfo?.name || "Casant Events",
@@ -64,29 +67,31 @@ export default function SettingsManager({ companyInfo }: SettingsManagerProps) {
     social_linkedin: companyInfo?.social_linkedin || "",
     social_youtube: companyInfo?.social_youtube || "",
     inventory_hero_image_url: companyInfo?.inventory_hero_image_url || "",
+    maintenance_mode: companyInfo?.maintenance_mode ?? false,
   })
 
   const handleSubmit = async () => {
     const supabase = createClient()
     setIsLoading(true)
     setSaved(false)
+    setError(null)
 
     try {
       if (companyInfo?.id) {
         const { error } = await supabase.from("company_info").update(formData).eq("id", companyInfo.id)
-
         if (error) throw error
       } else {
         const { error } = await supabase.from("company_info").insert(formData)
-
         if (error) throw error
       }
 
       setSaved(true)
       router.refresh()
       setTimeout(() => setSaved(false), 3000)
-    } catch (error) {
-      console.error("Error saving settings:", error)
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Failed to save settings"
+      setError(msg)
+      console.error("Error saving settings:", err)
     } finally {
       setIsLoading(false)
     }
@@ -99,10 +104,13 @@ export default function SettingsManager({ companyInfo }: SettingsManagerProps) {
           <h1 className="text-2xl font-bold text-slate-800">Company Settings</h1>
           <p className="text-slate-500">Manage your company information and branding</p>
         </div>
-        <Button onClick={handleSubmit} disabled={isLoading} className="bg-blue-600 hover:bg-blue-700">
-          <Save className="w-4 h-4 mr-2" />
-          {isLoading ? "Saving..." : saved ? "Saved!" : "Save Changes"}
-        </Button>
+        <div className="flex flex-col items-end gap-1">
+          {error && <p className="text-sm text-red-600">{error}</p>}
+          <Button onClick={handleSubmit} disabled={isLoading} className="bg-blue-600 hover:bg-blue-700">
+            <Save className="w-4 h-4 mr-2" />
+            {isLoading ? "Saving..." : saved ? "Saved!" : "Save Changes"}
+          </Button>
+        </div>
       </div>
 
       <Tabs defaultValue="general" className="space-y-6">
@@ -122,6 +130,10 @@ export default function SettingsManager({ companyInfo }: SettingsManagerProps) {
           <TabsTrigger value="social" className="flex items-center gap-2">
             <Share2 className="w-4 h-4" />
             Social Media
+          </TabsTrigger>
+          <TabsTrigger value="site" className="flex items-center gap-2">
+            <Globe className="w-4 h-4" />
+            Site
           </TabsTrigger>
         </TabsList>
 
@@ -439,6 +451,43 @@ export default function SettingsManager({ companyInfo }: SettingsManagerProps) {
                   />
                 </div>
               </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+        <TabsContent value="site">
+          <Card>
+            <CardHeader>
+              <CardTitle>Site Visibility</CardTitle>
+              <CardDescription>Control whether the public website is accessible to visitors</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-start gap-4 p-4 rounded-lg border border-amber-200 bg-amber-50">
+                <Checkbox
+                  id="maintenance_mode"
+                  checked={formData.maintenance_mode}
+                  onCheckedChange={(checked) =>
+                    setFormData({ ...formData, maintenance_mode: checked === true })
+                  }
+                  className="mt-0.5"
+                />
+                <div className="flex-1">
+                  <Label htmlFor="maintenance_mode" className="text-base font-semibold cursor-pointer">
+                    Enable Maintenance Mode
+                  </Label>
+                  <p className="text-sm text-slate-500 mt-1">
+                    When enabled, all public pages will show a &quot;Website Under Maintenance&quot; page.
+                    The admin panel remains fully accessible.
+                  </p>
+                  {formData.maintenance_mode && (
+                    <p className="text-sm font-medium text-amber-700 mt-2">
+                      Maintenance mode is currently ON — the public website is hidden.
+                    </p>
+                  )}
+                </div>
+              </div>
+              <p className="text-xs text-slate-400 mt-3">
+                Remember to click &quot;Save Changes&quot; at the top to apply.
+              </p>
             </CardContent>
           </Card>
         </TabsContent>

@@ -47,6 +47,7 @@ export default function TeamManager({ members }: TeamManagerProps) {
   const [editingMember, setEditingMember] = useState<TeamMember | null>(null)
   const [deletingMember, setDeletingMember] = useState<TeamMember | null>(null)
   const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const [formData, setFormData] = useState({
     name: "",
@@ -96,6 +97,7 @@ export default function TeamManager({ members }: TeamManagerProps) {
   const handleSubmit = async () => {
     const supabase = createClient()
     setIsLoading(true)
+    setError(null)
 
     try {
       const data = {
@@ -111,22 +113,22 @@ export default function TeamManager({ members }: TeamManagerProps) {
 
       if (editingMember) {
         const { error } = await supabase.from("team_members").update(data).eq("id", editingMember.id)
-
         if (error) throw error
       } else {
         const { error } = await supabase.from("team_members").insert({
           ...data,
           display_order: members.length,
         })
-
         if (error) throw error
       }
 
       setIsDialogOpen(false)
       resetForm()
       router.refresh()
-    } catch (error) {
-      console.error("Error saving team member:", error)
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Failed to save team member"
+      setError(msg)
+      console.error("Error saving team member:", err)
     } finally {
       setIsLoading(false)
     }
@@ -146,8 +148,10 @@ export default function TeamManager({ members }: TeamManagerProps) {
       setIsDeleteDialogOpen(false)
       setDeletingMember(null)
       router.refresh()
-    } catch (error) {
-      console.error("Error deleting team member:", error)
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Failed to delete team member"
+      setError(msg)
+      console.error("Error deleting team member:", err)
     } finally {
       setIsLoading(false)
     }
@@ -324,12 +328,16 @@ export default function TeamManager({ members }: TeamManagerProps) {
               <Label>Active (visible on website)</Label>
             </div>
           </div>
-          <DialogFooter>
+          <DialogFooter className="flex-col items-stretch gap-2 sm:flex-row sm:items-center">
+            {error && (
+              <p className="text-sm text-red-600 flex-1">{error}</p>
+            )}
             <Button
               variant="outline"
               onClick={() => {
                 setIsDialogOpen(false)
                 resetForm()
+                setError(null)
               }}
             >
               Cancel
