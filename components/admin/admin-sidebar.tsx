@@ -91,10 +91,10 @@ export default function AdminSidebar({ unreadCount = 0 }: AdminSidebarProps) {
           </button>
         </div>
 
-        <nav className="p-4 space-y-1">
+        <nav className="flex flex-col h-[calc(100vh-65px)] overflow-y-auto p-4 space-y-1 scrollbar-thin scrollbar-track-slate-900 scrollbar-thumb-slate-700">
           <Link
             href="/"
-            className="flex items-center gap-3 px-3 py-2.5 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors mb-4"
+            className="flex items-center gap-3 px-3 py-2.5 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors mb-4 shrink-0"
           >
             <ChevronLeft className="w-5 h-5" />
             <span>Back to Website</span>
@@ -104,11 +104,12 @@ export default function AdminSidebar({ unreadCount = 0 }: AdminSidebarProps) {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${
+              onClick={() => setSidebarOpen(false)}
+              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors shrink-0 ${
                 isActive(item.href) ? "bg-blue-600 text-white" : "text-slate-300 hover:text-white hover:bg-slate-800"
               }`}
             >
-              <item.icon className="w-5 h-5" />
+              <item.icon className="w-5 h-5 shrink-0" />
               <span>{item.label}</span>
               {item.badge && unreadCount > 0 && <Badge className="ml-auto bg-red-500 text-white">{unreadCount}</Badge>}
             </Link>
