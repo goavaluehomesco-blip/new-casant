@@ -47,16 +47,16 @@ export function TrackRecord({ companyInfo }: TrackRecordProps) {
     : []
 
   return (
-    <section ref={sectionRef} className="py-12 bg-background">
+    <section ref={sectionRef} className="py-6 bg-background">
       <div className="container mx-auto px-6">
-        <div className="grid lg:grid-cols-2 gap-8 items-center max-w-7xl mx-auto">
+        <div className="grid lg:grid-cols-2 gap-4 items-center max-w-5xl mx-auto">
           <div
             className={`relative transition-all duration-1000 ${
               isVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-12"
             }`}
           >
-            <div className="relative aspect-square max-w-sm mx-auto">
-              <div className="grid grid-cols-4 gap-0.5 absolute inset-0">
+            <div className="relative aspect-square max-w-[200px] mx-auto">
+              <div className="grid grid-cols-4 gap-0 absolute inset-0">
                 {[...Array(16)].map((_, i) => (
                   <div key={i} className="relative overflow-hidden bg-slate-100">
                     {collageImages[i] ? (
@@ -65,7 +65,7 @@ export function TrackRecord({ companyInfo }: TrackRecordProps) {
                         alt=""
                         fill
                         className="object-cover"
-                        sizes="10vw"
+                        sizes="6vw"
                         loading="lazy"
                       />
                     ) : (
@@ -76,10 +76,10 @@ export function TrackRecord({ companyInfo }: TrackRecordProps) {
               </div>
               <div className="absolute inset-0 flex items-center justify-center">
                 <span
-                  className="text-[120px] md:text-[140px] font-bold text-white drop-shadow-2xl"
+                  className="text-4xl md:text-5xl font-bold text-white drop-shadow-2xl"
                   style={{
-                    textShadow: "4px 4px 0 #3b82f6, -2px -2px 0 #3b82f6",
-                    WebkitTextStroke: "2px #3b82f6",
+                    textShadow: "1px 1px 0 #3b82f6",
+                    WebkitTextStroke: "0.5px #3b82f6",
                   }}
                 >
                   {yearsInBusiness}
@@ -94,26 +94,23 @@ export function TrackRecord({ companyInfo }: TrackRecordProps) {
             }`}
           >
             <span className="text-primary font-medium tracking-wide text-xs uppercase">Our Track Record</span>
-            <h2 className="text-2xl md:text-3xl font-bold text-foreground mt-2 mb-1 leading-tight">
-              Creating best Event
-              <br />
-              experiences since
+            <h2 className="text-base md:text-lg font-bold text-foreground mt-0.5 mb-0.5 leading-snug">
+              Creating best Event experiences
             </h2>
-            <span className="text-2xl md:text-3xl font-bold text-primary">{yearsInBusiness} years</span>
 
-            <p className="text-muted-foreground leading-relaxed mt-3 mb-5 max-w-lg text-sm">{description}</p>
+            <p className="text-muted-foreground leading-tight mt-1 mb-3 max-w-lg text-xs line-clamp-2">{description}</p>
 
-            <div className="flex gap-8 mb-6">
+            <div className="flex gap-4 mb-2">
               {stats.map((stat, index) => (
                 <div key={index}>
-                  <div className="text-2xl font-bold text-foreground">{stat.value}</div>
+                  <div className="text-sm font-bold text-foreground">{stat.value}</div>
                   <div className="text-xs text-primary font-medium">{stat.label}</div>
                 </div>
               ))}
             </div>
 
             <Link href="/about">
-              <Button className="rounded-full px-6 text-sm bg-primary hover:bg-primary/90">Learn More</Button>
+              <Button className="rounded-full px-3 text-xs bg-primary hover:bg-primary/90 h-7">Learn More</Button>
             </Link>
           </div>
         </div>
