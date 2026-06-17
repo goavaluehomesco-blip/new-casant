@@ -17,10 +17,9 @@ export function DiagonalDivider({ imageUrl }: DiagonalDividerProps) {
         src={src}
         alt=""
         fill
-        className="object-none"
+        className="object-cover"
         sizes="100vw"
         priority={false}
-        style={{ fontSize: "10px" }}
       />
     </div>
   )
