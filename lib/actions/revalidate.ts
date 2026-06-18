@@ -11,7 +11,7 @@ export async function revalidateServices() {
 }
 
 export async function revalidateCompanyInfo() {
-  revalidateTag("company-info", "pages")
+  revalidateTag("company-info")
   revalidatePath("/", "layout")
 }
 

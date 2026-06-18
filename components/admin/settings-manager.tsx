@@ -231,10 +231,7 @@ export default function SettingsManager({ companyInfo }: SettingsManagerProps) {
                     <Input
                       id="tagline"
                       value={formData.tagline}
-                      onChange={(e) => {
-                        console.log("[v0] Tagline changed from", formData.tagline, "to", e.target.value)
-                        setFormData({ ...formData, tagline: e.target.value })
-                      }}
+                      onChange={(e) => setFormData({ ...formData, tagline: e.target.value })}
                       placeholder="Creating Unforgettable Moments"
                     />
                   </div>
