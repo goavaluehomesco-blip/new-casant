@@ -15,9 +15,9 @@ export default async function AdminHrPage() {
   const hrInfo = hrResult.error?.code === "PGRST205" ? null : (hrResult.data || null)
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-[#0f0f0f]">
       <AdminSidebar user={adminUser} unreadCount={unreadCount} />
-      <div className="lg:pl-64">
+      <div className="lg:pl-56">
         <HrManager jobPostings={jobs} hrInfo={hrInfo} />
       </div>
     </div>

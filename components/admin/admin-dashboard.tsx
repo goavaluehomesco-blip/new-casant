@@ -1,26 +1,24 @@
 "use client"
 
-import { useRouter } from "next/navigation"
-import { createClient } from "@/lib/supabase/client"
 import {
   ImageIcon,
   Package,
   Users,
   MessageSquare,
   Settings,
-  Menu,
   Home,
   Lightbulb,
   Building2,
   Heart,
   ChevronRight,
-  Bell,
+  Mail,
+  Layers,
+  Quote,
+  Instagram,
+  Briefcase,
+  Images,
 } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
-import { useState } from "react"
 
 interface AdminDashboardProps {
   user: {
@@ -44,182 +42,157 @@ interface AdminDashboardProps {
   }>
 }
 
+const contentLinks = [
+  { icon: Home, label: "Hero Section", href: "/admin/hero", desc: "Slides & CTAs" },
+  { icon: Layers, label: "Services", href: "/admin/services", desc: "Service cards" },
+  { icon: Heart, label: "Weddings", href: "/admin/weddings", desc: "Portfolio gallery" },
+  { icon: Building2, label: "Corporate", href: "/admin/corporate", desc: "Portfolio gallery" },
+  { icon: Images, label: "Gallery", href: "/admin/gallery", desc: "All media" },
+  { icon: Quote, label: "Testimonials", href: "/admin/testimonials", desc: "Client reviews" },
+  { icon: Instagram, label: "Instagram", href: "/admin/instagram", desc: "Feed posts" },
+  { icon: Package, label: "Inventory", href: "/admin/inventory", desc: "Equipment" },
+  { icon: Users, label: "Team", href: "/admin/team", desc: "Members" },
+  { icon: Briefcase, label: "Careers / HR", href: "/admin/hr", desc: "Job postings" },
+  { icon: Settings, label: "Settings", href: "/admin/settings", desc: "Company info" },
+]
+
+function timeAgo(dateStr: string) {
+  const diff = Date.now() - new Date(dateStr).getTime()
+  const mins = Math.floor(diff / 60000)
+  if (mins < 60) return `${mins}m ago`
+  const hrs = Math.floor(mins / 60)
+  if (hrs < 24) return `${hrs}h ago`
+  return `${Math.floor(hrs / 24)}d ago`
+}
+
 export default function AdminDashboard({ user, stats, recentContacts }: AdminDashboardProps) {
-  const router = useRouter()
+  const firstName = user.full_name?.split(" ")[0] || "Admin"
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      {/* Top bar */}
-      <header className="sticky top-0 z-30 bg-white border-b border-slate-200 px-4 py-3">
-        <div className="flex items-center justify-between">
-          <h1 className="text-xl font-semibold text-slate-800">Dashboard</h1>
-          <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon" className="relative">
-              <Bell className="w-5 h-5" />
-              {stats.unreadContacts > 0 && (
-                <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full text-[10px] text-white flex items-center justify-center">
-                  {stats.unreadContacts}
-                </span>
-              )}
-            </Button>
-            <Link href="/" target="_blank">
-              <Button variant="outline" size="sm">
-                View Website
-              </Button>
+    <div className="min-h-screen bg-[#0f0f0f] text-white">
+      {/* Top header */}
+      <header className="sticky top-0 z-30 flex items-center justify-between h-14 px-6 border-b border-white/[0.06] bg-[#0f0f0f]/80 backdrop-blur-md">
+        <div>
+          <h1 className="text-sm font-semibold text-white/90">Dashboard</h1>
+        </div>
+        <div className="flex items-center gap-2">
+          {stats.unreadContacts > 0 && (
+            <Link href="/admin/contacts">
+              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-medium hover:bg-blue-500/20 transition-colors">
+                <Mail className="w-3 h-3" />
+                {stats.unreadContacts} new
+              </div>
             </Link>
-          </div>
+          )}
+          <Link
+            href="/"
+            target="_blank"
+            className="px-2.5 py-1 rounded-md border border-white/10 text-white/50 text-xs font-medium hover:text-white/80 hover:border-white/20 transition-colors"
+          >
+            View site
+          </Link>
         </div>
       </header>
 
-      {/* Dashboard content */}
-      <main className="p-6 max-w-7xl mx-auto">
-        {/* Stats cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <Card className="bg-gradient-to-br from-blue-500 to-blue-600 text-white border-0">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium opacity-90">Unread Messages</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold">{stats.unreadContacts}</div>
-              <p className="text-xs opacity-75 mt-1">New contact submissions</p>
-            </CardContent>
-          </Card>
-          <Card className="bg-gradient-to-br from-emerald-500 to-emerald-600 text-white border-0">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium opacity-90">Gallery Projects</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold">{stats.totalProjects}</div>
-              <p className="text-xs opacity-75 mt-1">Weddings & Corporate</p>
-            </CardContent>
-          </Card>
-          <Card className="bg-gradient-to-br from-purple-500 to-purple-600 text-white border-0">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium opacity-90">Inventory Items</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold">{stats.totalInventory}</div>
-              <p className="text-xs opacity-75 mt-1">Lights, Sound & Production</p>
-            </CardContent>
-          </Card>
+      <main className="px-6 py-8 max-w-6xl mx-auto">
+        {/* Greeting */}
+        <div className="mb-8">
+          <h2 className="text-xl font-semibold text-white/90">Good to see you, {firstName}</h2>
+          <p className="text-sm text-white/40 mt-0.5">Here&apos;s what&apos;s happening with Casant Events.</p>
         </div>
 
-        {/* Quick actions */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Quick Actions</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              <Link
-                href="/admin/weddings/new"
-                className="flex items-center justify-between p-3 bg-slate-50 hover:bg-slate-100 rounded-lg transition-colors"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-pink-100 rounded-lg flex items-center justify-center">
-                    <Heart className="w-5 h-5 text-pink-600" />
-                  </div>
-                  <span className="font-medium">Add Wedding Project</span>
-                </div>
-                <ChevronRight className="w-5 h-5 text-slate-400" />
-              </Link>
-              <Link
-                href="/admin/corporate/new"
-                className="flex items-center justify-between p-3 bg-slate-50 hover:bg-slate-100 rounded-lg transition-colors"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                    <Building2 className="w-5 h-5 text-blue-600" />
-                  </div>
-                  <span className="font-medium">Add Corporate Event</span>
-                </div>
-                <ChevronRight className="w-5 h-5 text-slate-400" />
-              </Link>
-              <Link
-                href="/admin/inventory/new"
-                className="flex items-center justify-between p-3 bg-slate-50 hover:bg-slate-100 rounded-lg transition-colors"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center">
-                    <Lightbulb className="w-5 h-5 text-amber-600" />
-                  </div>
-                  <span className="font-medium">Add Inventory Item</span>
-                </div>
-                <ChevronRight className="w-5 h-5 text-slate-400" />
-              </Link>
-            </CardContent>
-          </Card>
+        {/* Stat cards */}
+        <div className="grid grid-cols-3 gap-3 mb-8">
+          <Link href="/admin/contacts">
+            <div className="group p-4 rounded-xl border border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.04] hover:border-white/10 transition-all">
+              <p className="text-[11px] font-medium text-white/40 uppercase tracking-wider mb-2">Unread Messages</p>
+              <p className="text-3xl font-semibold text-white tabular-nums">{stats.unreadContacts}</p>
+              <p className="text-xs text-white/30 mt-1">Contact submissions</p>
+            </div>
+          </Link>
+          <Link href="/admin/gallery">
+            <div className="group p-4 rounded-xl border border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.04] hover:border-white/10 transition-all">
+              <p className="text-[11px] font-medium text-white/40 uppercase tracking-wider mb-2">Gallery Projects</p>
+              <p className="text-3xl font-semibold text-white tabular-nums">{stats.totalProjects}</p>
+              <p className="text-xs text-white/30 mt-1">Weddings &amp; Corporate</p>
+            </div>
+          </Link>
+          <Link href="/admin/inventory">
+            <div className="group p-4 rounded-xl border border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.04] hover:border-white/10 transition-all">
+              <p className="text-[11px] font-medium text-white/40 uppercase tracking-wider mb-2">Inventory Items</p>
+              <p className="text-3xl font-semibold text-white tabular-nums">{stats.totalInventory}</p>
+              <p className="text-xs text-white/30 mt-1">Equipment &amp; Production</p>
+            </div>
+          </Link>
+        </div>
 
-          {/* Recent contacts */}
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle className="text-lg">Recent Messages</CardTitle>
-              <Link href="/admin/contacts">
-                <Button variant="ghost" size="sm">
-                  View All
-                </Button>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Content sections — takes 2 cols */}
+          <div className="lg:col-span-2">
+            <p className="text-xs font-semibold text-white/30 uppercase tracking-widest mb-3">Content Sections</p>
+            <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden divide-y divide-white/[0.04]">
+              {contentLinks.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="flex items-center gap-3 px-4 py-3 hover:bg-white/[0.03] transition-colors group"
+                >
+                  <div className="w-7 h-7 rounded-md bg-white/[0.05] flex items-center justify-center shrink-0">
+                    <item.icon className="w-3.5 h-3.5 text-white/50 group-hover:text-white/80 transition-colors" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-white/80 group-hover:text-white transition-colors">{item.label}</p>
+                    <p className="text-xs text-white/30">{item.desc}</p>
+                  </div>
+                  <ChevronRight className="w-3.5 h-3.5 text-white/20 group-hover:text-white/50 transition-colors shrink-0" />
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          {/* Recent messages — 1 col */}
+          <div>
+            <div className="flex items-center justify-between mb-3">
+              <p className="text-xs font-semibold text-white/30 uppercase tracking-widest">Recent Messages</p>
+              <Link href="/admin/contacts" className="text-xs text-blue-400 hover:text-blue-300 transition-colors">
+                View all
               </Link>
-            </CardHeader>
-            <CardContent>
+            </div>
+            <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden divide-y divide-white/[0.04]">
               {recentContacts.length === 0 ? (
-                <p className="text-slate-500 text-sm text-center py-4">No contact submissions yet</p>
+                <div className="px-4 py-8 text-center">
+                  <Mail className="w-6 h-6 text-white/20 mx-auto mb-2" />
+                  <p className="text-sm text-white/30">No messages yet</p>
+                </div>
               ) : (
-                <div className="space-y-3">
-                  {recentContacts.map((contact) => (
-                    <div
-                      key={contact.id}
-                      className={`p-3 rounded-lg ${
-                        contact.is_read ? "bg-slate-50" : "bg-blue-50 border border-blue-100"
-                      }`}
-                    >
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="font-medium text-sm">{contact.name}</span>
-                        {!contact.is_read && <Badge className="bg-blue-500 text-white text-[10px]">New</Badge>}
-                      </div>
-                      <p className="text-xs text-slate-500">{contact.email}</p>
+                recentContacts.map((contact) => (
+                  <Link
+                    key={contact.id}
+                    href="/admin/contacts"
+                    className="flex flex-col gap-0.5 px-4 py-3 hover:bg-white/[0.03] transition-colors"
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <span className={`text-sm font-medium truncate ${contact.is_read ? "text-white/60" : "text-white/90"}`}>
+                        {contact.name}
+                      </span>
+                      {!contact.is_read && (
+                        <span className="shrink-0 w-1.5 h-1.5 rounded-full bg-blue-400" />
+                      )}
+                    </div>
+                    <p className="text-xs text-white/30 truncate">{contact.email}</p>
+                    <div className="flex items-center justify-between mt-0.5">
                       {contact.event_type && (
-                        <span className="inline-block mt-1 text-[10px] bg-slate-200 text-slate-600 px-2 py-0.5 rounded">
+                        <span className="text-[10px] text-white/30 bg-white/[0.06] px-1.5 py-0.5 rounded">
                           {contact.event_type}
                         </span>
                       )}
+                      <span className="text-[10px] text-white/25 ml-auto">{timeAgo(contact.created_at)}</span>
                     </div>
-                  ))}
-                </div>
+                  </Link>
+                ))
               )}
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Content management sections */}
-        <h2 className="text-lg font-semibold text-slate-800 mb-4">Content Management</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {[
-            { icon: Home, label: "Hero Section", href: "/admin/hero", bg: "#dbeafe", color: "#2563eb" },
-            { icon: Heart, label: "Weddings Gallery", href: "/admin/weddings", bg: "#fce7f3", color: "#db2777" },
-            { icon: Building2, label: "Corporate Gallery", href: "/admin/corporate", bg: "#e0e7ff", color: "#4f46e5" },
-            { icon: Package, label: "Inventory", href: "/admin/inventory", bg: "#fef3c7", color: "#d97706" },
-            { icon: Users, label: "Team Members", href: "/admin/team", bg: "#dcfce7", color: "#16a34a" },
-            { icon: Settings, label: "Company Info", href: "/admin/settings", bg: "#f1f5f9", color: "#475569" },
-            { icon: ImageIcon, label: "Media Library", href: "/admin/media", bg: "#f3e8ff", color: "#9333ea" },
-            { icon: MessageSquare, label: "Messages", href: "/admin/contacts", bg: "#fee2e2", color: "#dc2626" },
-          ].map((item) => (
-            <Link key={item.href} href={item.href}>
-              <Card className="hover:shadow-md transition-shadow cursor-pointer h-full">
-                <CardContent className="p-4 flex items-center gap-3">
-                  <div
-                    className="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0"
-                    style={{ backgroundColor: item.bg }}
-                  >
-                    <item.icon className="w-6 h-6" style={{ color: item.color }} />
-                  </div>
-                  <div>
-                    <p className="font-medium text-slate-800">{item.label}</p>
-                    <p className="text-xs text-slate-500">Manage content</p>
-                  </div>
-                </CardContent>
-              </Card>
-            </Link>
-          ))}
+            </div>
+          </div>
         </div>
       </main>
     </div>

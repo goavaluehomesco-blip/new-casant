@@ -9,9 +9,9 @@ export default async function AdminDatabasePage() {
   const { count } = await supabase.from("contact_submissions").select("*", { count: "exact", head: true }).eq("is_read", false).eq("is_archived", false)
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-[#0f0f0f]">
       <AdminSidebar user={adminUser} unreadCount={count ?? 0} />
-      <div className="lg:pl-64">
+      <div className="lg:pl-56">
         <DatabaseMonitor />
       </div>
     </div>
