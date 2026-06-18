@@ -15,7 +15,7 @@ export default function AdminLayout({
   children: React.ReactNode
 }) {
   return (
-    <div className={`${inter.className} min-h-screen bg-slate-100`}>
+    <div className={`${inter.className} min-h-screen bg-[#0f0f0f]`}>
       <StorageWarningBanner />
       {children}
     </div>

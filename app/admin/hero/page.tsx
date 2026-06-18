@@ -12,9 +12,9 @@ export default async function AdminHeroPage() {
     .order("display_order")
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-[#0f0f0f]">
       <AdminSidebar user={adminUser} unreadCount={unreadCount} />
-      <div className="lg:pl-64">
+      <div className="lg:pl-56">
         <HeroManager slides={heroSlides || []} />
       </div>
     </div>
