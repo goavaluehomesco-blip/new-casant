@@ -11,7 +11,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import ImageUpload from "@/components/admin/image-upload"
 import VideoUpload from "@/components/admin/video-upload"
-import { Card, CardContent } from "@/components/ui/card"
+
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { Switch } from "@/components/ui/switch"
 import {
@@ -183,64 +183,72 @@ export default function HeroManager({ slides }: HeroManagerProps) {
           </Card>
         ) : (
           slides.map((slide) => (
-            <Card key={slide.id} className={`overflow-hidden ${!slide.is_active ? "opacity-60" : ""}`}>
-              <div className="h-36 bg-slate-900 relative overflow-hidden">
+            <div
+              key={slide.id}
+              className={`group relative rounded-xl overflow-hidden border border-white/8 bg-[#161616] transition-all duration-200 hover:border-white/20 ${!slide.is_active ? "opacity-50" : ""}`}
+            >
+              {/* Preview */}
+              <div className="relative h-40 bg-[#0a0a0a] overflow-hidden">
                 {slide.video_url ? (
-                  <div className="w-full h-full flex items-center justify-center">
-                    <Video className="w-12 h-12 text-white/50" />
-                    <span className="absolute bottom-2 left-2 text-xs text-white bg-black/50 px-2 py-1 rounded">
-                      Video
-                    </span>
+                  <div className="w-full h-full flex flex-col items-center justify-center gap-2">
+                    <Video className="w-8 h-8 text-white/30" />
+                    <span className="text-xs text-white/40">Video slide</span>
                   </div>
                 ) : slide.image_url ? (
                   <img
-                    src={slide.image_url || "/placeholder.svg"}
+                    src={slide.image_url}
                     alt={slide.title}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                   />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center">
-                    <ImageIcon className="w-12 h-12 text-white/50" />
+                  <div className="w-full h-full flex flex-col items-center justify-center gap-2">
+                    <ImageIcon className="w-8 h-8 text-white/30" />
+                    <span className="text-xs text-white/40">No media</span>
                   </div>
                 )}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-4">
-                  <div>
-                    <h3 className="text-white font-semibold text-lg">{slide.title}</h3>
-                    {slide.subtitle && <p className="text-white/70 text-sm">{slide.subtitle}</p>}
-                  </div>
+
+                {/* Gradient overlay with title */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-3">
+                  <p className="text-white font-semibold text-sm leading-tight line-clamp-1">{slide.title}</p>
+                  {slide.subtitle && (
+                    <p className="text-white/60 text-xs mt-0.5 line-clamp-1">{slide.subtitle}</p>
+                  )}
+                </div>
+
+                {/* Status pill */}
+                <div className="absolute top-2.5 right-2.5">
+                  <span
+                    className={`text-[10px] font-medium px-2 py-0.5 rounded-full border ${
+                      slide.is_active
+                        ? "bg-emerald-500/15 text-emerald-400 border-emerald-500/25"
+                        : "bg-white/5 text-white/40 border-white/10"
+                    }`}
+                  >
+                    {slide.is_active ? "Active" : "Inactive"}
+                  </span>
                 </div>
               </div>
-              <CardContent className="py-3">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span
-                      className={`text-xs px-2 py-1 rounded ${
-                        slide.is_active ? "bg-green-100 text-green-700" : "bg-slate-100 text-white/50"
-                      }`}
-                    >
-                      {slide.is_active ? "Active" : "Inactive"}
-                    </span>
-                    <span className="text-xs text-white/50">CTA: {slide.cta_text}</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <Button variant="ghost" size="icon" onClick={() => openEditDialog(slide)}>
-                      <Edit className="w-4 h-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="text-red-500 hover:text-red-600 hover:bg-red-50"
-                      onClick={() => {
-                        setDeletingSlide(slide)
-                        setIsDeleteDialogOpen(true)
-                      }}
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
-                  </div>
+
+              {/* Footer */}
+              <div className="flex items-center justify-between px-3 py-2.5 border-t border-white/8">
+                <span className="text-[11px] text-white/35 truncate max-w-[100px]">{slide.cta_text}</span>
+                <div className="flex items-center gap-0.5">
+                  <button
+                    onClick={() => openEditDialog(slide)}
+                    className="p-1.5 rounded-lg text-white/40 hover:text-white hover:bg-white/8 transition-colors"
+                  >
+                    <Edit className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    onClick={() => { setDeletingSlide(slide); setIsDeleteDialogOpen(true) }}
+                    className="p-1.5 rounded-lg text-white/40 hover:text-red-400 hover:bg-red-500/10 transition-colors"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           ))
         )}
       </div>
