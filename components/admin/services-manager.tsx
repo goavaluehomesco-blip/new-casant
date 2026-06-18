@@ -221,8 +221,8 @@ export default function ServicesManager({ services }: ServicesManagerProps) {
     <div className="p-6 max-w-7xl mx-auto">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-slate-800">Services</h1>
-          <p className="text-slate-500">Manage the services shown on the home page</p>
+          <h1 className="text-2xl font-bold text-white">Services</h1>
+          <p className="text-white/50">Manage the services shown on the home page</p>
         </div>
         <Button onClick={openCreateDialog} className="bg-blue-600 hover:bg-blue-700">
           <Plus className="w-4 h-4 mr-2" />
@@ -234,8 +234,8 @@ export default function ServicesManager({ services }: ServicesManagerProps) {
         {services.length === 0 ? (
           <Card className="col-span-full">
             <CardContent className="py-12 text-center">
-              <Layers className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-              <p className="text-slate-500 mb-4">No services yet.</p>
+              <Layers className="w-12 h-12 text-white/30 mx-auto mb-4" />
+              <p className="text-white/50 mb-4">No services yet.</p>
               <Button variant="outline" className="bg-transparent" onClick={openCreateDialog}>
                 <Plus className="w-4 h-4 mr-2" />
                 Add First Service
@@ -250,12 +250,12 @@ export default function ServicesManager({ services }: ServicesManagerProps) {
                   <img src={service.image_url} alt={service.title} className="w-full h-full object-cover" />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center">
-                    <Layers className="w-10 h-10 text-slate-300" />
+                    <Layers className="w-10 h-10 text-white/30" />
                   </div>
                 )}
                 <span
                   className={`absolute top-2 right-2 text-xs px-2 py-1 rounded ${
-                    service.is_active ? "bg-green-100 text-green-700" : "bg-slate-100 text-slate-500"
+                    service.is_active ? "bg-green-100 text-green-700" : "bg-slate-100 text-white/50"
                   }`}
                 >
                   {service.is_active ? "Active" : "Hidden"}
@@ -265,7 +265,7 @@ export default function ServicesManager({ services }: ServicesManagerProps) {
                 <div className="flex items-start justify-between">
                   <div>
                     <CardTitle className="text-base">{service.title}</CardTitle>
-                    <p className="text-xs text-slate-400 mt-0.5">Icon: {service.icon || "none"}</p>
+                    <p className="text-xs text-white/40 mt-0.5">Icon: {service.icon || "none"}</p>
                   </div>
                   <div className="flex items-center gap-1">
                     <Button variant="ghost" size="icon" onClick={() => openEditDialog(service)}>
@@ -283,7 +283,7 @@ export default function ServicesManager({ services }: ServicesManagerProps) {
                 </div>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-slate-500 line-clamp-2">{service.description}</p>
+                <p className="text-sm text-white/50 line-clamp-2">{service.description}</p>
                 {service.link && (
                   <p className="text-xs text-blue-500 mt-2 truncate">Link: {service.link}</p>
                 )}
@@ -339,7 +339,7 @@ export default function ServicesManager({ services }: ServicesManagerProps) {
 
           {/* Existing photos grid */}
           {serviceImages.length === 0 ? (
-            <div className="text-center py-10 text-slate-400">
+            <div className="text-center py-10 text-white/40">
               <Images className="w-10 h-10 mx-auto mb-2 opacity-30" />
               <p>No photos yet. Upload the first one above.</p>
             </div>

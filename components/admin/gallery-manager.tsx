@@ -318,8 +318,8 @@ export default function GalleryManager({
       <div>
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-slate-800">{title}</h1>
-            <p className="text-slate-500">{description}</p>
+            <h1 className="text-2xl font-bold text-white">{title}</h1>
+            <p className="text-white/50">{description}</p>
           </div>
           <Button
             onClick={() => { resetForm(); setIsDialogOpen(true) }}
@@ -334,8 +334,8 @@ export default function GalleryManager({
           {projects.length === 0 ? (
             <Card className="col-span-full">
               <CardContent className="py-12 text-center">
-                <ImageIcon className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-                <p className="text-slate-500">No event groups yet.</p>
+                <ImageIcon className="w-12 h-12 text-white/30 mx-auto mb-4" />
+                <p className="text-white/50">No event groups yet.</p>
                 <Button
                   variant="outline"
                   className="mt-4 bg-transparent"
@@ -358,7 +358,7 @@ export default function GalleryManager({
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">
-                      <ImageIcon className="w-12 h-12 text-slate-300" />
+                      <ImageIcon className="w-12 h-12 text-white/30" />
                     </div>
                   )}
                   {project.is_featured && (
@@ -379,7 +379,7 @@ export default function GalleryManager({
                   <div className="flex items-start justify-between">
                     <div>
                       <CardTitle className="text-base">{project.title}</CardTitle>
-                      <div className="flex gap-2 mt-1 text-xs text-slate-400">
+                      <div className="flex gap-2 mt-1 text-xs text-white/40">
                         {project.location && (
                           <span className="flex items-center gap-0.5">
                             <MapPin className="w-3 h-3" />{project.location}
@@ -409,7 +409,7 @@ export default function GalleryManager({
                   </div>
                 </CardHeader>
                 <CardContent className="pt-0">
-                  <p className="text-sm text-slate-500 line-clamp-2">{project.description}</p>
+                  <p className="text-sm text-white/50 line-clamp-2">{project.description}</p>
                   <div className="flex items-center justify-between mt-3 pt-3 border-t">
                     <button
                       onClick={() => openImagesDialog(project)}
@@ -417,7 +417,7 @@ export default function GalleryManager({
                     >
                       Manage photos
                     </button>
-                    <span className={`text-xs px-2 py-1 rounded ${project.is_active ? "bg-green-100 text-green-700" : "bg-slate-100 text-slate-500"}`}>
+                    <span className={`text-xs px-2 py-1 rounded ${project.is_active ? "bg-green-100 text-green-700" : "bg-slate-100 text-white/50"}`}>
                       {project.is_active ? "Published" : "Draft"}
                     </span>
                   </div>
@@ -553,11 +553,11 @@ export default function GalleryManager({
                   >
                     <X className="w-3 h-3" />
                   </Button>
-                  {image.caption && <p className="text-xs text-slate-500 mt-1 truncate">{image.caption}</p>}
+                  {image.caption && <p className="text-xs text-white/50 mt-1 truncate">{image.caption}</p>}
                 </div>
               ))}
               {(!managingImagesProject?.gallery_images || managingImagesProject.gallery_images.length === 0) && (
-                <div className="col-span-3 text-center py-8 text-slate-400 text-sm">No photos yet. Add some above.</div>
+                <div className="col-span-3 text-center py-8 text-white/40 text-sm">No photos yet. Add some above.</div>
               )}
             </div>
           </div>

@@ -100,7 +100,7 @@ export default function AdminSidebar({ user, unreadCount = 0 }: AdminSidebarProp
       <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-5 scrollbar-none">
         {navSections.map((section) => (
           <div key={section.label}>
-            <p className="px-2 mb-1 text-[10px] font-semibold uppercase tracking-widest text-white/25">
+            <p className="px-2 mb-1 text-[10px] font-semibold uppercase tracking-widest text-white/45">
               {section.label}
             </p>
             <div className="space-y-0.5">
@@ -144,7 +144,7 @@ export default function AdminSidebar({ user, unreadCount = 0 }: AdminSidebarProp
         </Link>
         <div className="px-2 py-1.5">
           <p className="text-xs font-medium text-white/60 truncate">{user.full_name || user.email}</p>
-          <p className="text-[11px] text-white/30 truncate">{user.email}</p>
+          <p className="text-[11px] text-white/50 truncate">{user.email}</p>
         </div>
       </div>
     </div>

@@ -81,15 +81,15 @@ export default function TestimonialsManager({ testimonials: initial }: Testimoni
     <div className="p-8">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Testimonials</h1>
-          <p className="text-slate-500 mt-1">Manage client quotes shown on the homepage</p>
+          <h1 className="text-2xl font-bold text-white">Testimonials</h1>
+          <p className="text-white/50 mt-1">Manage client quotes shown on the homepage</p>
         </div>
         <Button onClick={openNew} className="gap-2"><Plus className="w-4 h-4" />Add Testimonial</Button>
       </div>
 
       <div className="grid gap-4">
         {items.length === 0 && (
-          <div className="text-center py-16 text-slate-400">No testimonials yet. Add your first one.</div>
+          <div className="text-center py-16 text-white/40">No testimonials yet. Add your first one.</div>
         )}
         {items.map(item => (
           <div key={item.id} className="bg-white rounded-xl border border-slate-200 p-5 flex gap-4 items-start">
@@ -97,19 +97,19 @@ export default function TestimonialsManager({ testimonials: initial }: Testimoni
               <img src={item.client_image_url} alt="" className="w-16 h-16 rounded-lg object-cover flex-shrink-0" />
             ) : (
               <div className="w-16 h-16 rounded-lg bg-slate-100 flex items-center justify-center flex-shrink-0">
-                <Quote className="w-6 h-6 text-slate-400" />
+                <Quote className="w-6 h-6 text-white/40" />
               </div>
             )}
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-1">
-                <span className="font-semibold text-slate-900">{item.client_name}</span>
-                {item.client_role && <span className="text-xs text-slate-400">{item.client_role}</span>}
-                {item.client_company && <span className="text-xs text-slate-400">{item.client_company}</span>}
+                <span className="font-semibold text-white">{item.client_name}</span>
+                {item.client_role && <span className="text-xs text-white/40">{item.client_role}</span>}
+                {item.client_company && <span className="text-xs text-white/40">{item.client_company}</span>}
               </div>
-              <p className="text-slate-500 text-sm line-clamp-2 italic">"{item.testimonial_text}"</p>
+              <p className="text-white/50 text-sm line-clamp-2 italic">"{item.testimonial_text}"</p>
             </div>
             <div className="flex items-center gap-2 flex-shrink-0">
-              <button onClick={() => toggleActive(item)} className="text-slate-400 hover:text-primary transition-colors" title={item.is_active ? "Active" : "Inactive"}>
+              <button onClick={() => toggleActive(item)} className="text-white/40 hover:text-primary transition-colors" title={item.is_active ? "Active" : "Inactive"}>
                 {item.is_active ? <ToggleRight className="w-5 h-5 text-green-500" /> : <ToggleLeft className="w-5 h-5" />}
               </button>
               <Button size="sm" variant="ghost" onClick={() => openEdit(item)}><Pencil className="w-4 h-4" /></Button>

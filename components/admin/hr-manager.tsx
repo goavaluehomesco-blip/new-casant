@@ -110,7 +110,7 @@ export default function HrManager({ jobPostings: initialJobs, hrInfo: initialHr 
     <div className="p-8 space-y-10">
       {/* HR Info Settings */}
       <div className="bg-white rounded-xl border border-slate-200 p-6">
-        <h2 className="text-lg font-bold text-slate-900 mb-5">Careers Page Settings</h2>
+        <h2 className="text-lg font-bold text-white mb-5">Careers Page Settings</h2>
         <div className="grid md:grid-cols-2 gap-4">
           <div className="grid gap-2">
             <Label>Page Heading</Label>
@@ -148,15 +148,15 @@ export default function HrManager({ jobPostings: initialJobs, hrInfo: initialHr 
       <div>
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h2 className="text-lg font-bold text-slate-900">Job Postings</h2>
-            <p className="text-slate-500 text-sm mt-0.5">Manage open positions shown on the Careers page</p>
+            <h2 className="text-lg font-bold text-white">Job Postings</h2>
+            <p className="text-white/50 text-sm mt-0.5">Manage open positions shown on the Careers page</p>
           </div>
           <Button onClick={openNewJob} className="gap-2"><Plus className="w-4 h-4" />Add Job</Button>
         </div>
 
         <div className="grid gap-4">
           {jobs.length === 0 && (
-            <div className="text-center py-12 text-slate-400 bg-white rounded-xl border border-slate-200">No job postings yet.</div>
+            <div className="text-center py-12 text-white/40 bg-white rounded-xl border border-slate-200">No job postings yet.</div>
           )}
           {jobs.map(job => (
             <div key={job.id} className="bg-white rounded-xl border border-slate-200 p-5 flex gap-4 items-start">
@@ -165,18 +165,18 @@ export default function HrManager({ jobPostings: initialJobs, hrInfo: initialHr 
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex flex-wrap items-center gap-2 mb-1">
-                  <span className="font-semibold text-slate-900">{job.title}</span>
-                  {job.department && <span className="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full">{job.department}</span>}
-                  <span className={`text-xs px-2 py-0.5 rounded-full ${job.is_active ? "bg-green-50 text-green-700" : "bg-slate-100 text-slate-500"}`}>{job.is_active ? "Active" : "Hidden"}</span>
+                  <span className="font-semibold text-white">{job.title}</span>
+                  {job.department && <span className="text-xs bg-slate-100 text-white/60 px-2 py-0.5 rounded-full">{job.department}</span>}
+                  <span className={`text-xs px-2 py-0.5 rounded-full ${job.is_active ? "bg-green-50 text-green-700" : "bg-slate-100 text-white/50"}`}>{job.is_active ? "Active" : "Hidden"}</span>
                 </div>
-                <div className="flex flex-wrap gap-3 text-xs text-slate-400">
+                <div className="flex flex-wrap gap-3 text-xs text-white/40">
                   {job.location && <span className="flex items-center gap-1"><MapPin className="w-3 h-3" />{job.location}</span>}
                   <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{job.job_type}</span>
                 </div>
-                <p className="text-slate-500 text-sm mt-2 line-clamp-2">{job.description}</p>
+                <p className="text-white/50 text-sm mt-2 line-clamp-2">{job.description}</p>
               </div>
               <div className="flex items-center gap-2 flex-shrink-0">
-                <button onClick={() => toggleJobActive(job)} className="text-slate-400 hover:text-primary transition-colors">
+                <button onClick={() => toggleJobActive(job)} className="text-white/40 hover:text-primary transition-colors">
                   {job.is_active ? <ToggleRight className="w-5 h-5 text-green-500" /> : <ToggleLeft className="w-5 h-5" />}
                 </button>
                 <Button size="sm" variant="ghost" onClick={() => openEditJob(job)}><Pencil className="w-4 h-4" /></Button>

@@ -160,8 +160,8 @@ export default function HeroManager({ slides }: HeroManagerProps) {
     <div className="p-6 max-w-7xl mx-auto">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-slate-800">Hero Section</h1>
-          <p className="text-slate-500">Manage your homepage hero slides</p>
+          <h1 className="text-2xl font-bold text-white">Hero Section</h1>
+          <p className="text-white/50">Manage your homepage hero slides</p>
         </div>
         <Button onClick={openCreateDialog} className="bg-blue-600 hover:bg-blue-700">
           <Plus className="w-4 h-4 mr-2" />
@@ -173,8 +173,8 @@ export default function HeroManager({ slides }: HeroManagerProps) {
         {slides.length === 0 ? (
           <Card className="col-span-full">
             <CardContent className="py-12 text-center">
-              <Video className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-              <p className="text-slate-500">No hero slides yet.</p>
+              <Video className="w-12 h-12 text-white/30 mx-auto mb-4" />
+              <p className="text-white/50">No hero slides yet.</p>
               <Button variant="outline" className="mt-4 bg-transparent" onClick={openCreateDialog}>
                 <Plus className="w-4 h-4 mr-2" />
                 Add First Slide
@@ -187,7 +187,7 @@ export default function HeroManager({ slides }: HeroManagerProps) {
               <div className="h-36 bg-slate-900 relative overflow-hidden">
                 {slide.video_url ? (
                   <div className="w-full h-full flex items-center justify-center">
-                    <Video className="w-12 h-12 text-slate-500" />
+                    <Video className="w-12 h-12 text-white/50" />
                     <span className="absolute bottom-2 left-2 text-xs text-white bg-black/50 px-2 py-1 rounded">
                       Video
                     </span>
@@ -200,7 +200,7 @@ export default function HeroManager({ slides }: HeroManagerProps) {
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center">
-                    <ImageIcon className="w-12 h-12 text-slate-500" />
+                    <ImageIcon className="w-12 h-12 text-white/50" />
                   </div>
                 )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-4">
@@ -215,12 +215,12 @@ export default function HeroManager({ slides }: HeroManagerProps) {
                   <div className="flex items-center gap-2">
                     <span
                       className={`text-xs px-2 py-1 rounded ${
-                        slide.is_active ? "bg-green-100 text-green-700" : "bg-slate-100 text-slate-500"
+                        slide.is_active ? "bg-green-100 text-green-700" : "bg-slate-100 text-white/50"
                       }`}
                     >
                       {slide.is_active ? "Active" : "Inactive"}
                     </span>
-                    <span className="text-xs text-slate-500">CTA: {slide.cta_text}</span>
+                    <span className="text-xs text-white/50">CTA: {slide.cta_text}</span>
                   </div>
                   <div className="flex items-center gap-1">
                     <Button variant="ghost" size="icon" onClick={() => openEditDialog(slide)}>
