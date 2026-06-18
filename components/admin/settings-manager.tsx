@@ -173,8 +173,8 @@ export default function SettingsManager({ companyInfo }: SettingsManagerProps) {
     <div className="p-6 max-w-4xl mx-auto">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-slate-800">Company Settings</h1>
-          <p className="text-slate-500">Manage your company information and branding</p>
+          <h1 className="text-2xl font-bold text-white">Company Settings</h1>
+          <p className="text-white/50">Manage your company information and branding</p>
         </div>
         <div className="flex flex-col items-end gap-1">
           {error && <p className="text-sm text-red-600">{error}</p>}
@@ -231,10 +231,7 @@ export default function SettingsManager({ companyInfo }: SettingsManagerProps) {
                     <Input
                       id="tagline"
                       value={formData.tagline}
-                      onChange={(e) => {
-                        console.log("[v0] Tagline changed from", formData.tagline, "to", e.target.value)
-                        setFormData({ ...formData, tagline: e.target.value })
-                      }}
+                      onChange={(e) => setFormData({ ...formData, tagline: e.target.value })}
                       placeholder="Creating Unforgettable Moments"
                     />
                   </div>
@@ -448,7 +445,7 @@ export default function SettingsManager({ companyInfo }: SettingsManagerProps) {
                           </button>
                         </div>
                       ) : (
-                        <div className="h-20 rounded border-2 border-dashed border-slate-200 flex items-center justify-center text-slate-400 text-xs">
+                        <div className="h-20 rounded border-2 border-dashed border-slate-200 flex items-center justify-center text-white/40 text-xs">
                           {i + 1}
                         </div>
                       )}
@@ -456,7 +453,7 @@ export default function SettingsManager({ companyInfo }: SettingsManagerProps) {
                   ))}
                 </div>
                 <div className="mt-2">
-                  <p className="text-sm text-slate-500 mb-2">Add photo ({formData.track_record_images.length}/16)</p>
+                  <p className="text-sm text-white/50 mb-2">Add photo ({formData.track_record_images.length}/16)</p>
                   {formData.track_record_images.length < 16 && (
                     <ImageUpload
                       value=""
@@ -547,7 +544,7 @@ export default function SettingsManager({ companyInfo }: SettingsManagerProps) {
                   <Label htmlFor="maintenance_mode" className="text-base font-semibold cursor-pointer">
                     Enable Maintenance Mode
                   </Label>
-                  <p className="text-sm text-slate-500 mt-1">
+                  <p className="text-sm text-white/50 mt-1">
                     When enabled, all public pages will show a &quot;Website Under Maintenance&quot; page.
                     The admin panel remains fully accessible.
                   </p>
@@ -558,7 +555,7 @@ export default function SettingsManager({ companyInfo }: SettingsManagerProps) {
                   )}
                 </div>
               </div>
-              <p className="text-xs text-slate-400 mt-3">
+              <p className="text-xs text-white/40 mt-3">
                 Remember to click &quot;Save Changes&quot; at the top to apply.
               </p>
             </CardContent>

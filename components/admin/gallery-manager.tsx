@@ -9,10 +9,8 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import ImageUpload from "@/components/admin/image-upload"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { Switch } from "@/components/ui/switch"
-import { Badge } from "@/components/ui/badge"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -265,61 +263,59 @@ export default function GalleryManager({
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-8">
       {/* Category Settings */}
-      <Card className="border-blue-100 bg-blue-50/40">
-        <CardHeader className="pb-2">
-          <CardTitle className="flex items-center gap-2 text-base text-slate-700">
-            <Settings2 className="w-4 h-4 text-blue-500" />
-            Page Settings — Banner &amp; Header
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label>Page Title</Label>
-              <Input
-                value={categoryData.name}
-                onChange={(e) => setCategoryData({ ...categoryData, name: e.target.value })}
-                placeholder="e.g. Wedding Events"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label>Page Description</Label>
-              <Input
-                value={categoryData.description}
-                onChange={(e) => setCategoryData({ ...categoryData, description: e.target.value })}
-                placeholder="Short description shown under the title..."
-              />
-            </div>
-          </div>
+      <div className="rounded-xl border border-white/10 bg-[#161616] p-5 space-y-4">
+        <div className="flex items-center gap-2 mb-1">
+          <Settings2 className="w-4 h-4 text-blue-400" />
+          <span className="text-sm font-semibold text-white">Page Settings — Banner &amp; Header</span>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label>Banner Background Image</Label>
-            <ImageUpload
-              value={categoryData.image_url}
-              onChange={(url) => setCategoryData({ ...categoryData, image_url: url })}
-              folder="gallery-banners"
-              aspectRatio="video"
-              label="Banner Image (shown behind the page title)"
+            <Label className="text-white/60 text-xs">Page Title</Label>
+            <Input
+              value={categoryData.name}
+              onChange={(e) => setCategoryData({ ...categoryData, name: e.target.value })}
+              placeholder="e.g. Wedding Events"
+              className="bg-white/5 border-white/10 text-white placeholder:text-white/25 focus:border-blue-500/50"
             />
           </div>
-          <div className="flex justify-end">
-            <Button
-              onClick={handleSaveCategory}
-              disabled={isCategorySaving}
-              className="bg-blue-600 hover:bg-blue-700"
-            >
-              <Save className="w-4 h-4 mr-2" />
-              {isCategorySaving ? "Saving..." : "Save Page Settings"}
-            </Button>
+          <div className="space-y-2">
+            <Label className="text-white/60 text-xs">Page Description</Label>
+            <Input
+              value={categoryData.description}
+              onChange={(e) => setCategoryData({ ...categoryData, description: e.target.value })}
+              placeholder="Short description shown under the title..."
+              className="bg-white/5 border-white/10 text-white placeholder:text-white/25 focus:border-blue-500/50"
+            />
           </div>
-        </CardContent>
-      </Card>
+        </div>
+        <div className="space-y-2">
+          <Label className="text-white/60 text-xs">Banner Background Image</Label>
+          <ImageUpload
+            value={categoryData.image_url}
+            onChange={(url) => setCategoryData({ ...categoryData, image_url: url })}
+            folder="gallery-banners"
+            aspectRatio="video"
+            label="Banner Image (shown behind the page title)"
+          />
+        </div>
+        <div className="flex justify-end pt-1">
+          <Button
+            onClick={handleSaveCategory}
+            disabled={isCategorySaving}
+            className="bg-blue-600 hover:bg-blue-700 text-white"
+          >
+            <Save className="w-4 h-4 mr-2" />
+            {isCategorySaving ? "Saving..." : "Save Page Settings"}
+          </Button>
+        </div>
+      </div>
 
       {/* Projects */}
       <div>
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-slate-800">{title}</h1>
-            <p className="text-slate-500">{description}</p>
+            <h1 className="text-2xl font-bold text-white">{title}</h1>
+            <p className="text-white/50">{description}</p>
           </div>
           <Button
             onClick={() => { resetForm(); setIsDialogOpen(true) }}
@@ -332,97 +328,112 @@ export default function GalleryManager({
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {projects.length === 0 ? (
-            <Card className="col-span-full">
-              <CardContent className="py-12 text-center">
-                <ImageIcon className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-                <p className="text-slate-500">No event groups yet.</p>
-                <Button
-                  variant="outline"
-                  className="mt-4 bg-transparent"
-                  onClick={() => { resetForm(); setIsDialogOpen(true) }}
-                >
-                  <Plus className="w-4 h-4 mr-2" />
-                  Add First Event Group
-                </Button>
-              </CardContent>
-            </Card>
+            <div className="col-span-full rounded-xl border border-white/8 bg-[#161616] py-14 flex flex-col items-center gap-3">
+              <ImageIcon className="w-10 h-10 text-white/20" />
+              <p className="text-white/40 text-sm">No event groups yet.</p>
+              <Button
+                variant="outline"
+                className="mt-1 bg-transparent border-white/15 text-white/60 hover:text-white hover:border-white/30"
+                onClick={() => { resetForm(); setIsDialogOpen(true) }}
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                Add First Event Group
+              </Button>
+            </div>
           ) : (
             projects.map((project) => (
-              <Card key={project.id} className={`overflow-hidden ${!project.is_active ? "opacity-60" : ""}`}>
-                <div className="h-36 bg-slate-100 relative overflow-hidden">
+              <div
+                key={project.id}
+                className={`group relative rounded-xl overflow-hidden border border-white/8 bg-[#161616] transition-all hover:border-white/20 ${!project.is_active ? "opacity-50" : ""}`}
+              >
+                {/* Cover image */}
+                <div className="relative h-36 bg-[#0a0a0a] overflow-hidden">
                   {project.cover_image ? (
                     <img
                       src={project.cover_image}
                       alt={project.title}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">
-                      <ImageIcon className="w-12 h-12 text-slate-300" />
+                      <ImageIcon className="w-8 h-8 text-white/20" />
                     </div>
                   )}
+                  {/* Gradient */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+
+                  {/* Status pill */}
+                  <span className={`absolute top-2.5 right-2.5 text-[10px] font-medium px-2 py-0.5 rounded-full border ${
+                    project.is_active
+                      ? "bg-emerald-500/15 text-emerald-400 border-emerald-500/25"
+                      : "bg-white/5 text-white/40 border-white/10"
+                  }`}>
+                    {project.is_active ? "Published" : "Draft"}
+                  </span>
+
+                  {/* Featured badge */}
                   {project.is_featured && (
-                    <Badge className="absolute top-2 left-2 bg-amber-500">
-                      <Star className="w-3 h-3 mr-1" />
+                    <span className="absolute top-2.5 left-2.5 text-[10px] font-medium px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/30 flex items-center gap-1">
+                      <Star className="w-2.5 h-2.5" />
                       Featured
-                    </Badge>
+                    </span>
                   )}
+
+                  {/* Photo count pill */}
                   <button
                     onClick={() => openImagesDialog(project)}
-                    className="absolute top-2 right-2 bg-white/90 hover:bg-white text-slate-700 text-xs px-2 py-1 rounded flex items-center gap-1 shadow"
+                    className="absolute bottom-2.5 right-2.5 flex items-center gap-1 text-[10px] text-white/70 bg-black/50 hover:bg-black/70 px-2 py-0.5 rounded-full transition-colors"
                   >
                     <ImageIcon className="w-3 h-3" />
-                    {project.gallery_images?.length || 0} photos
+                    {project.gallery_images?.length || 0}
                   </button>
                 </div>
-                <CardHeader className="pb-2">
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <CardTitle className="text-base">{project.title}</CardTitle>
-                      <div className="flex gap-2 mt-1 text-xs text-slate-400">
-                        {project.location && (
-                          <span className="flex items-center gap-0.5">
-                            <MapPin className="w-3 h-3" />{project.location}
-                          </span>
-                        )}
-                        {project.event_date && (
-                          <span className="flex items-center gap-0.5">
-                            <Calendar className="w-3 h-3" />
-                            {new Date(project.event_date).toLocaleDateString()}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Button variant="ghost" size="icon" onClick={() => openEditDialog(project)}>
-                        <Edit className="w-4 h-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="text-red-500 hover:text-red-600 hover:bg-red-50"
-                        onClick={() => { setDeletingProject(project); setIsDeleteDialogOpen(true) }}
+
+                {/* Body */}
+                <div className="p-3">
+                  <div className="flex items-start justify-between gap-1">
+                    <p className="text-sm font-semibold text-white leading-tight line-clamp-1">{project.title}</p>
+                    <div className="flex items-center gap-0.5 flex-shrink-0">
+                      <button
+                        onClick={() => openEditDialog(project)}
+                        className="p-1.5 rounded-lg text-white/35 hover:text-white hover:bg-white/8 transition-colors"
                       >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
+                        <Edit className="w-3.5 h-3.5" />
+                      </button>
+                      <button
+                        onClick={() => { setDeletingProject(project); setIsDeleteDialogOpen(true) }}
+                        className="p-1.5 rounded-lg text-white/35 hover:text-red-400 hover:bg-red-500/10 transition-colors"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
                     </div>
                   </div>
-                </CardHeader>
-                <CardContent className="pt-0">
-                  <p className="text-sm text-slate-500 line-clamp-2">{project.description}</p>
-                  <div className="flex items-center justify-between mt-3 pt-3 border-t">
-                    <button
-                      onClick={() => openImagesDialog(project)}
-                      className="text-xs text-blue-500 hover:underline"
-                    >
-                      Manage photos
-                    </button>
-                    <span className={`text-xs px-2 py-1 rounded ${project.is_active ? "bg-green-100 text-green-700" : "bg-slate-100 text-slate-500"}`}>
-                      {project.is_active ? "Published" : "Draft"}
-                    </span>
+                  <div className="flex gap-3 mt-1 text-[11px] text-white/35">
+                    {project.location && (
+                      <span className="flex items-center gap-0.5">
+                        <MapPin className="w-3 h-3" />{project.location}
+                      </span>
+                    )}
+                    {project.event_date && (
+                      <span className="flex items-center gap-0.5">
+                        <Calendar className="w-3 h-3" />
+                        {new Date(project.event_date).toLocaleDateString()}
+                      </span>
+                    )}
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+
+                {/* Footer */}
+                <div className="border-t border-white/8 px-3 py-2">
+                  <button
+                    onClick={() => openImagesDialog(project)}
+                    className="w-full flex items-center justify-center gap-1.5 text-xs text-white/45 hover:text-white transition-colors py-0.5"
+                  >
+                    <ImageIcon className="w-3.5 h-3.5" />
+                    Manage Photos
+                  </button>
+                </div>
+              </div>
             ))
           )}
         </div>
@@ -553,11 +564,11 @@ export default function GalleryManager({
                   >
                     <X className="w-3 h-3" />
                   </Button>
-                  {image.caption && <p className="text-xs text-slate-500 mt-1 truncate">{image.caption}</p>}
+                  {image.caption && <p className="text-xs text-white/50 mt-1 truncate">{image.caption}</p>}
                 </div>
               ))}
               {(!managingImagesProject?.gallery_images || managingImagesProject.gallery_images.length === 0) && (
-                <div className="col-span-3 text-center py-8 text-slate-400 text-sm">No photos yet. Add some above.</div>
+                <div className="col-span-3 text-center py-8 text-white/40 text-sm">No photos yet. Add some above.</div>
               )}
             </div>
           </div>

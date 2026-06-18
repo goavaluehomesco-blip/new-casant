@@ -70,8 +70,8 @@ export default function AllGalleryManager({ projects: initialProjects, categorie
     <div className="p-6 max-w-7xl mx-auto">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-slate-800">Gallery / Portfolio</h1>
-          <p className="text-slate-500 text-sm mt-1">
+          <h1 className="text-2xl font-bold text-white">Gallery / Portfolio</h1>
+          <p className="text-white/50 text-sm mt-1">
             Toggle projects as Featured to show them in the "Featured Work" section on the homepage.
           </p>
         </div>
@@ -96,7 +96,7 @@ export default function AllGalleryManager({ projects: initialProjects, categorie
       </Tabs>
 
       {filtered.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-16 text-slate-400">
+        <div className="flex flex-col items-center justify-center py-16 text-white/40">
           <Images className="w-12 h-12 mb-3 opacity-30" />
           <p className="text-sm">No projects found</p>
         </div>
@@ -115,7 +115,7 @@ export default function AllGalleryManager({ projects: initialProjects, categorie
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center text-slate-300">
+                  <div className="w-full h-full flex items-center justify-center text-white/30">
                     <Images className="w-8 h-8" />
                   </div>
                 )}
@@ -129,8 +129,8 @@ export default function AllGalleryManager({ projects: initialProjects, categorie
                 )}
               </div>
               <CardContent className="p-3">
-                <p className="font-medium text-sm text-slate-800 truncate">{project.title}</p>
-                <p className="text-xs text-slate-400 mb-3">
+                <p className="font-medium text-sm text-white truncate">{project.title}</p>
+                <p className="text-xs text-white/40 mb-3">
                   {project.gallery_categories?.name || "—"} · {project.gallery_images?.length || 0} photos
                 </p>
                 <Button

@@ -208,8 +208,8 @@ export default function InventoryManager({ categories, items }: InventoryManager
     <div className="p-6 max-w-7xl mx-auto">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-slate-800">Inventory Management</h1>
-          <p className="text-slate-500">Manage your lighting, sound, and production equipment</p>
+          <h1 className="text-2xl font-bold text-white">Inventory Management</h1>
+          <p className="text-white/50">Manage your lighting, sound, and production equipment</p>
         </div>
         <Button onClick={openCreateDialog} className="bg-blue-600 hover:bg-blue-700">
           <Plus className="w-4 h-4 mr-2" />
@@ -236,7 +236,7 @@ export default function InventoryManager({ categories, items }: InventoryManager
               {filteredItems.length === 0 ? (
                 <Card className="col-span-full">
                   <CardContent className="py-12 text-center">
-                    <p className="text-slate-500">No items in this category yet.</p>
+                    <p className="text-white/50">No items in this category yet.</p>
                     <Button variant="outline" className="mt-4 bg-transparent" onClick={openCreateDialog}>
                       <Plus className="w-4 h-4 mr-2" />
                       Add First Item
@@ -277,18 +277,18 @@ export default function InventoryManager({ categories, items }: InventoryManager
                           />
                         </div>
                       )}
-                      <p className="text-sm text-slate-600 mb-3">{item.description}</p>
+                      <p className="text-sm text-white/60 mb-3">{item.description}</p>
                       {item.specifications && item.specifications.length > 0 && (
                         <div className="flex flex-wrap gap-1">
                           {item.specifications.map((spec, index) => (
-                            <span key={index} className="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded">
+                            <span key={index} className="text-xs bg-slate-100 text-white/60 px-2 py-1 rounded">
                               {spec}
                             </span>
                           ))}
                         </div>
                       )}
                       <div className="flex items-center justify-between mt-3 pt-3 border-t">
-                        <span className="text-xs text-slate-500">Qty: {item.quantity}</span>
+                        <span className="text-xs text-white/50">Qty: {item.quantity}</span>
                         <span
                           className={`text-xs px-2 py-1 rounded ${
                             item.is_available ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
@@ -376,7 +376,7 @@ export default function InventoryManager({ categories, items }: InventoryManager
               <div className="space-y-2">
                 {formData.specifications.map((spec, index) => (
                   <div key={index} className="flex items-center gap-2">
-                    <GripVertical className="w-4 h-4 text-slate-400" />
+                    <GripVertical className="w-4 h-4 text-white/40" />
                     <Input
                       value={spec}
                       onChange={(e) => handleSpecificationChange(index, e.target.value)}

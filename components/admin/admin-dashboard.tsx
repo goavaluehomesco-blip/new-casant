@@ -98,7 +98,7 @@ export default function AdminDashboard({ user, stats, recentContacts }: AdminDas
         {/* Greeting */}
         <div className="mb-8">
           <h2 className="text-xl font-semibold text-white/90">Good to see you, {firstName}</h2>
-          <p className="text-sm text-white/40 mt-0.5">Here&apos;s what&apos;s happening with Casant Events.</p>
+          <p className="text-sm text-white/55 mt-0.5">Here&apos;s what&apos;s happening with Casant Events.</p>
         </div>
 
         {/* Stat cards */}
@@ -107,21 +107,21 @@ export default function AdminDashboard({ user, stats, recentContacts }: AdminDas
             <div className="group p-4 rounded-xl border border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.04] hover:border-white/10 transition-all">
               <p className="text-[11px] font-medium text-white/40 uppercase tracking-wider mb-2">Unread Messages</p>
               <p className="text-3xl font-semibold text-white tabular-nums">{stats.unreadContacts}</p>
-              <p className="text-xs text-white/30 mt-1">Contact submissions</p>
+              <p className="text-xs text-white/50 mt-1">Contact submissions</p>
             </div>
           </Link>
           <Link href="/admin/gallery">
             <div className="group p-4 rounded-xl border border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.04] hover:border-white/10 transition-all">
               <p className="text-[11px] font-medium text-white/40 uppercase tracking-wider mb-2">Gallery Projects</p>
               <p className="text-3xl font-semibold text-white tabular-nums">{stats.totalProjects}</p>
-              <p className="text-xs text-white/30 mt-1">Weddings &amp; Corporate</p>
+              <p className="text-xs text-white/50 mt-1">Weddings &amp; Corporate</p>
             </div>
           </Link>
           <Link href="/admin/inventory">
             <div className="group p-4 rounded-xl border border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.04] hover:border-white/10 transition-all">
               <p className="text-[11px] font-medium text-white/40 uppercase tracking-wider mb-2">Inventory Items</p>
               <p className="text-3xl font-semibold text-white tabular-nums">{stats.totalInventory}</p>
-              <p className="text-xs text-white/30 mt-1">Equipment &amp; Production</p>
+              <p className="text-xs text-white/50 mt-1">Equipment &amp; Production</p>
             </div>
           </Link>
         </div>
@@ -129,7 +129,7 @@ export default function AdminDashboard({ user, stats, recentContacts }: AdminDas
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Content sections — takes 2 cols */}
           <div className="lg:col-span-2">
-            <p className="text-xs font-semibold text-white/30 uppercase tracking-widest mb-3">Content Sections</p>
+            <p className="text-xs font-semibold text-white/50 uppercase tracking-widest mb-3">Content Sections</p>
             <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden divide-y divide-white/[0.04]">
               {contentLinks.map((item) => (
                 <Link
@@ -142,7 +142,7 @@ export default function AdminDashboard({ user, stats, recentContacts }: AdminDas
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-white/80 group-hover:text-white transition-colors">{item.label}</p>
-                    <p className="text-xs text-white/30">{item.desc}</p>
+                    <p className="text-xs text-white/50">{item.desc}</p>
                   </div>
                   <ChevronRight className="w-3.5 h-3.5 text-white/20 group-hover:text-white/50 transition-colors shrink-0" />
                 </Link>
@@ -153,7 +153,7 @@ export default function AdminDashboard({ user, stats, recentContacts }: AdminDas
           {/* Recent messages — 1 col */}
           <div>
             <div className="flex items-center justify-between mb-3">
-              <p className="text-xs font-semibold text-white/30 uppercase tracking-widest">Recent Messages</p>
+              <p className="text-xs font-semibold text-white/50 uppercase tracking-widest">Recent Messages</p>
               <Link href="/admin/contacts" className="text-xs text-blue-400 hover:text-blue-300 transition-colors">
                 View all
               </Link>
@@ -161,8 +161,8 @@ export default function AdminDashboard({ user, stats, recentContacts }: AdminDas
             <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden divide-y divide-white/[0.04]">
               {recentContacts.length === 0 ? (
                 <div className="px-4 py-8 text-center">
-                  <Mail className="w-6 h-6 text-white/20 mx-auto mb-2" />
-                  <p className="text-sm text-white/30">No messages yet</p>
+                  <Mail className="w-6 h-6 text-white/30 mx-auto mb-2" />
+                  <p className="text-sm text-white/50">No messages yet</p>
                 </div>
               ) : (
                 recentContacts.map((contact) => (
@@ -179,14 +179,14 @@ export default function AdminDashboard({ user, stats, recentContacts }: AdminDas
                         <span className="shrink-0 w-1.5 h-1.5 rounded-full bg-blue-400" />
                       )}
                     </div>
-                    <p className="text-xs text-white/30 truncate">{contact.email}</p>
+                    <p className="text-xs text-white/50 truncate">{contact.email}</p>
                     <div className="flex items-center justify-between mt-0.5">
                       {contact.event_type && (
-                        <span className="text-[10px] text-white/30 bg-white/[0.06] px-1.5 py-0.5 rounded">
+                        <span className="text-[10px] text-white/50 bg-white/[0.06] px-1.5 py-0.5 rounded">
                           {contact.event_type}
                         </span>
                       )}
-                      <span className="text-[10px] text-white/25 ml-auto">{timeAgo(contact.created_at)}</span>
+                      <span className="text-[10px] text-white/40 ml-auto">{timeAgo(contact.created_at)}</span>
                     </div>
                   </Link>
                 ))

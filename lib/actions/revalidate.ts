@@ -1,6 +1,6 @@
 "use server"
 
-import { revalidatePath, revalidateTag } from "next/cache"
+import { revalidatePath } from "next/cache"
 
 export async function revalidateHeroSlides() {
   revalidatePath("/", "page")
@@ -11,7 +11,7 @@ export async function revalidateServices() {
 }
 
 export async function revalidateCompanyInfo() {
-  revalidateTag("company-info", "pages")
+  revalidatePath("/admin/settings", "page")
   revalidatePath("/", "layout")
 }
 

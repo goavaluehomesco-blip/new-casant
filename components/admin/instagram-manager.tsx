@@ -67,15 +67,15 @@ export default function InstagramManager({ posts: initial }: InstagramManagerPro
     <div className="p-8">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Instagram Carousel</h1>
-          <p className="text-slate-500 mt-1">Manage photos shown in the homepage Instagram feed</p>
+          <h1 className="text-2xl font-bold text-white">Instagram Carousel</h1>
+          <p className="text-white/50 mt-1">Manage photos shown in the homepage Instagram feed</p>
         </div>
         <Button onClick={openNew} className="gap-2"><Plus className="w-4 h-4" />Add Photo</Button>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {items.length === 0 && (
-          <div className="col-span-full text-center py-16 text-slate-400">No posts yet. Add your first photo.</div>
+          <div className="col-span-full text-center py-16 text-white/40">No posts yet. Add your first photo.</div>
         )}
         {items.map(item => (
           <div key={item.id} className="relative group rounded-xl overflow-hidden aspect-square bg-slate-100">

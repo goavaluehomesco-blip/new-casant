@@ -36,7 +36,7 @@ export default function AdminPageWrapper({
           )}
           <div>
             <h1 className="text-sm font-semibold text-white/90 leading-tight">{title}</h1>
-            {description && <p className="text-xs text-white/35 leading-tight">{description}</p>}
+            {description && <p className="text-xs text-white/55 leading-tight">{description}</p>}
           </div>
         </div>
         {action && <div className="flex items-center gap-2">{action}</div>}

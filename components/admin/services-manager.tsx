@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import {
   AlertDialog,
@@ -221,8 +221,8 @@ export default function ServicesManager({ services }: ServicesManagerProps) {
     <div className="p-6 max-w-7xl mx-auto">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-slate-800">Services</h1>
-          <p className="text-slate-500">Manage the services shown on the home page</p>
+          <h1 className="text-2xl font-bold text-white">Services</h1>
+          <p className="text-white/50">Manage the services shown on the home page</p>
         </div>
         <Button onClick={openCreateDialog} className="bg-blue-600 hover:bg-blue-700">
           <Plus className="w-4 h-4 mr-2" />
@@ -232,73 +232,83 @@ export default function ServicesManager({ services }: ServicesManagerProps) {
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {services.length === 0 ? (
-          <Card className="col-span-full">
-            <CardContent className="py-12 text-center">
-              <Layers className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-              <p className="text-slate-500 mb-4">No services yet.</p>
-              <Button variant="outline" className="bg-transparent" onClick={openCreateDialog}>
-                <Plus className="w-4 h-4 mr-2" />
-                Add First Service
-              </Button>
-            </CardContent>
-          </Card>
+          <div className="col-span-full rounded-xl border border-white/8 bg-[#161616] py-14 flex flex-col items-center gap-3">
+            <Layers className="w-10 h-10 text-white/20" />
+            <p className="text-white/40 text-sm">No services yet.</p>
+            <Button variant="outline" className="mt-1 bg-transparent border-white/15 text-white/60 hover:text-white hover:border-white/30" onClick={openCreateDialog}>
+              <Plus className="w-4 h-4 mr-2" />
+              Add First Service
+            </Button>
+          </div>
         ) : (
           services.map((service) => (
-            <Card key={service.id} className={`overflow-hidden ${!service.is_active ? "opacity-60" : ""}`}>
-                  <div className="h-36 bg-slate-100 relative overflow-hidden">
+            <div
+              key={service.id}
+              className={`group relative rounded-xl overflow-hidden border border-white/8 bg-[#161616] transition-all hover:border-white/20 ${!service.is_active ? "opacity-50" : ""}`}
+            >
+              {/* Image */}
+              <div className="relative h-36 bg-[#0a0a0a] overflow-hidden">
                 {service.image_url ? (
-                  <img src={service.image_url} alt={service.title} className="w-full h-full object-cover" />
+                  <img
+                    src={service.image_url}
+                    alt={service.title}
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center">
-                    <Layers className="w-10 h-10 text-slate-300" />
+                    <Layers className="w-8 h-8 text-white/20" />
                   </div>
                 )}
-                <span
-                  className={`absolute top-2 right-2 text-xs px-2 py-1 rounded ${
-                    service.is_active ? "bg-green-100 text-green-700" : "bg-slate-100 text-slate-500"
-                  }`}
-                >
+                {/* Status pill */}
+                <span className={`absolute top-2.5 right-2.5 text-[10px] font-medium px-2 py-0.5 rounded-full border ${
+                  service.is_active
+                    ? "bg-emerald-500/15 text-emerald-400 border-emerald-500/25"
+                    : "bg-white/5 text-white/40 border-white/10"
+                }`}>
                   {service.is_active ? "Active" : "Hidden"}
                 </span>
               </div>
-              <CardHeader className="pb-2">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <CardTitle className="text-base">{service.title}</CardTitle>
-                    <p className="text-xs text-slate-400 mt-0.5">Icon: {service.icon || "none"}</p>
+
+              {/* Body */}
+              <div className="p-3">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="min-w-0">
+                    <p className="text-sm font-semibold text-white leading-tight truncate">{service.title}</p>
+                    {service.icon && (
+                      <p className="text-[11px] text-white/35 mt-0.5">Icon: {service.icon}</p>
+                    )}
                   </div>
-                  <div className="flex items-center gap-1">
-                    <Button variant="ghost" size="icon" onClick={() => openEditDialog(service)}>
-                      <Edit className="w-4 h-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="text-red-500 hover:text-red-600 hover:bg-red-50"
-                      onClick={() => { setDeletingService(service); setIsDeleteDialogOpen(true) }}
+                  <div className="flex items-center gap-0.5 flex-shrink-0">
+                    <button
+                      onClick={() => openEditDialog(service)}
+                      className="p-1.5 rounded-lg text-white/35 hover:text-white hover:bg-white/8 transition-colors"
                     >
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
+                      <Edit className="w-3.5 h-3.5" />
+                    </button>
+                    <button
+                      onClick={() => { setDeletingService(service); setIsDeleteDialogOpen(true) }}
+                      className="p-1.5 rounded-lg text-white/35 hover:text-red-400 hover:bg-red-500/10 transition-colors"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
                   </div>
                 </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-slate-500 line-clamp-2">{service.description}</p>
-                {service.link && (
-                  <p className="text-xs text-blue-500 mt-2 truncate">Link: {service.link}</p>
+                {service.description && (
+                  <p className="text-[11px] text-white/40 mt-1.5 line-clamp-2 leading-relaxed">{service.description}</p>
                 )}
-                {/* Photos button */}
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="mt-3 w-full gap-2 bg-transparent"
+              </div>
+
+              {/* Footer */}
+              <div className="border-t border-white/8 px-3 py-2">
+                <button
                   onClick={() => openPhotosPanel(service)}
+                  className="w-full flex items-center justify-center gap-1.5 text-xs text-white/45 hover:text-white transition-colors py-0.5"
                 >
-                  <Images className="w-4 h-4" />
+                  <Images className="w-3.5 h-3.5" />
                   Manage Photos
-                </Button>
-              </CardContent>
-            </Card>
+                </button>
+              </div>
+            </div>
           ))
         )}
       </div>
@@ -339,7 +349,7 @@ export default function ServicesManager({ services }: ServicesManagerProps) {
 
           {/* Existing photos grid */}
           {serviceImages.length === 0 ? (
-            <div className="text-center py-10 text-slate-400">
+            <div className="text-center py-10 text-white/40">
               <Images className="w-10 h-10 mx-auto mb-2 opacity-30" />
               <p>No photos yet. Upload the first one above.</p>
             </div>

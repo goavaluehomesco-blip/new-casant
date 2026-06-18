@@ -108,13 +108,13 @@ export default function ContactsManager({ contacts }: ContactsManagerProps) {
     <div className="p-6 max-w-4xl mx-auto">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-slate-800">Contact Submissions</h1>
-          <p className="text-slate-500">
+          <h1 className="text-2xl font-bold text-white">Contact Submissions</h1>
+          <p className="text-white/50">
             {unreadCount} unread message{unreadCount !== 1 ? "s" : ""}
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <Filter className="w-4 h-4 text-slate-400" />
+          <Filter className="w-4 h-4 text-white/40" />
           <Select value={filter} onValueChange={(v: "all" | "unread" | "archived") => setFilter(v)}>
             <SelectTrigger className="w-40">
               <SelectValue />
@@ -132,8 +132,8 @@ export default function ContactsManager({ contacts }: ContactsManagerProps) {
         {filteredContacts.length === 0 ? (
           <Card>
             <CardContent className="py-12 text-center">
-              <Mail className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-              <p className="text-slate-500">
+              <Mail className="w-12 h-12 text-white/30 mx-auto mb-4" />
+              <p className="text-white/50">
                 {filter === "unread"
                   ? "No unread messages"
                   : filter === "archived"
@@ -162,22 +162,22 @@ export default function ContactsManager({ contacts }: ContactsManagerProps) {
                       {!contact.is_read ? (
                         <Mail className="w-5 h-5 text-white" />
                       ) : (
-                        <MailOpen className="w-5 h-5 text-slate-500" />
+                        <MailOpen className="w-5 h-5 text-white/50" />
                       )}
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
-                        <h3 className={`font-medium ${!contact.is_read ? "text-slate-900" : "text-slate-700"}`}>
+                        <h3 className={`font-medium ${!contact.is_read ? "text-white" : "text-slate-700"}`}>
                           {contact.name}
                         </h3>
                         {!contact.is_read && <Badge className="bg-blue-600 text-white text-[10px]">New</Badge>}
                       </div>
-                      <p className="text-sm text-slate-500">{contact.email}</p>
-                      {contact.phone && <p className="text-sm text-slate-600 mt-1">{contact.phone}</p>}
+                      <p className="text-sm text-white/50">{contact.email}</p>
+                      {contact.phone && <p className="text-sm text-white/60 mt-1">{contact.phone}</p>}
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="text-xs text-slate-500">{new Date(contact.created_at).toLocaleDateString()}</p>
+                    <p className="text-xs text-white/50">{new Date(contact.created_at).toLocaleDateString()}</p>
                     {contact.event_type && (
                       <Badge variant="outline" className="mt-1 text-[10px]">
                         {contact.event_type}
@@ -201,14 +201,14 @@ export default function ContactsManager({ contacts }: ContactsManagerProps) {
             <div className="space-y-4 py-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className="flex items-center gap-2 text-sm">
-                  <Mail className="w-4 h-4 text-slate-400" />
+                  <Mail className="w-4 h-4 text-white/40" />
                   <a href={`mailto:${selectedContact.email}`} className="text-blue-600 hover:underline">
                     {selectedContact.email}
                   </a>
                 </div>
                 {selectedContact.phone && (
                   <div className="flex items-center gap-2 text-sm">
-                    <Phone className="w-4 h-4 text-slate-400" />
+                    <Phone className="w-4 h-4 text-white/40" />
                     <a href={`tel:${selectedContact.phone}`} className="text-blue-600 hover:underline">
                       {selectedContact.phone}
                     </a>
@@ -216,7 +216,7 @@ export default function ContactsManager({ contacts }: ContactsManagerProps) {
                 )}
               </div>
 
-              <div className="flex items-center gap-4 text-sm text-slate-500">
+              <div className="flex items-center gap-4 text-sm text-white/50">
                 {selectedContact.event_type && <Badge variant="outline">{selectedContact.event_type}</Badge>}
                 {selectedContact.event_date && (
                   <span className="flex items-center gap-1">
@@ -232,7 +232,7 @@ export default function ContactsManager({ contacts }: ContactsManagerProps) {
                 </div>
               )}
 
-              <div className="text-xs text-slate-400">
+              <div className="text-xs text-white/40">
                 Received: {new Date(selectedContact.created_at).toLocaleString()}
               </div>
 

@@ -161,8 +161,8 @@ export default function TeamManager({ members }: TeamManagerProps) {
     <div className="p-6 max-w-7xl mx-auto">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-slate-800">Team Members</h1>
-          <p className="text-slate-500">Manage your team and directors</p>
+          <h1 className="text-2xl font-bold text-white">Team Members</h1>
+          <p className="text-white/50">Manage your team and directors</p>
         </div>
         <Button onClick={openCreateDialog} className="bg-blue-600 hover:bg-blue-700">
           <Plus className="w-4 h-4 mr-2" />
@@ -174,8 +174,8 @@ export default function TeamManager({ members }: TeamManagerProps) {
         {members.length === 0 ? (
           <Card className="col-span-full">
             <CardContent className="py-12 text-center">
-              <User className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-              <p className="text-slate-500">No team members yet.</p>
+              <User className="w-12 h-12 text-white/30 mx-auto mb-4" />
+              <p className="text-white/50">No team members yet.</p>
               <Button variant="outline" className="mt-4 bg-transparent" onClick={openCreateDialog}>
                 <Plus className="w-4 h-4 mr-2" />
                 Add First Member
@@ -196,7 +196,7 @@ export default function TeamManager({ members }: TeamManagerProps) {
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center">
-                        <User className="w-8 h-8 text-slate-400" />
+                        <User className="w-8 h-8 text-white/40" />
                       </div>
                     )}
                   </div>
@@ -207,11 +207,11 @@ export default function TeamManager({ members }: TeamManagerProps) {
                 </div>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-slate-600 line-clamp-3 mb-4">{member.bio}</p>
+                <p className="text-sm text-white/60 line-clamp-3 mb-4">{member.bio}</p>
                 <div className="flex items-center justify-between pt-3 border-t">
                   <span
                     className={`text-xs px-2 py-1 rounded ${
-                      member.is_active ? "bg-green-100 text-green-700" : "bg-slate-100 text-slate-500"
+                      member.is_active ? "bg-green-100 text-green-700" : "bg-slate-100 text-white/50"
                     }`}
                   >
                     {member.is_active ? "Active" : "Inactive"}
