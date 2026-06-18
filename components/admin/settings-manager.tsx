@@ -426,7 +426,7 @@ export default function SettingsManager({ companyInfo }: SettingsManagerProps) {
                   {[...Array(16)].map((_, i) => (
                     <div key={i} className="relative group">
                       {formData.track_record_images[i] ? (
-                        <div className="relative h-20 rounded overflow-hidden bg-slate-100">
+                        <div className="relative h-20 rounded overflow-hidden bg-[#0a0a0a]">
                           <img
                             src={formData.track_record_images[i]}
                             alt={`Collage ${i + 1}`}
@@ -435,17 +435,16 @@ export default function SettingsManager({ companyInfo }: SettingsManagerProps) {
                           <button
                             type="button"
                             onClick={() => {
-                              const updated = [...formData.track_record_images]
-                              updated.splice(i, 1)
+                              const updated = formData.track_record_images.filter((_, idx) => idx !== i)
                               setFormData({ ...formData, track_record_images: updated })
                             }}
-                            className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                            className="absolute top-1 right-1 bg-red-500/80 hover:bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center transition-colors"
                           >
                             <Trash2 className="w-3 h-3" />
                           </button>
                         </div>
                       ) : (
-                        <div className="h-20 rounded border-2 border-dashed border-slate-200 flex items-center justify-center text-white/40 text-xs">
+                        <div className="h-20 rounded border-2 border-dashed border-white/10 bg-white/5 flex items-center justify-center text-white/25 text-xs">
                           {i + 1}
                         </div>
                       )}
