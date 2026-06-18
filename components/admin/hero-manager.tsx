@@ -171,16 +171,14 @@ export default function HeroManager({ slides }: HeroManagerProps) {
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {slides.length === 0 ? (
-          <Card className="col-span-full">
-            <CardContent className="py-12 text-center">
-              <Video className="w-12 h-12 text-white/30 mx-auto mb-4" />
-              <p className="text-white/50">No hero slides yet.</p>
-              <Button variant="outline" className="mt-4 bg-transparent" onClick={openCreateDialog}>
-                <Plus className="w-4 h-4 mr-2" />
-                Add First Slide
-              </Button>
-            </CardContent>
-          </Card>
+          <div className="col-span-full rounded-xl border border-white/8 bg-[#161616] py-14 flex flex-col items-center gap-3">
+            <Video className="w-10 h-10 text-white/20" />
+            <p className="text-white/40 text-sm">No hero slides yet.</p>
+            <Button variant="outline" className="mt-1 bg-transparent border-white/15 text-white/60 hover:text-white hover:border-white/30" onClick={openCreateDialog}>
+              <Plus className="w-4 h-4 mr-2" />
+              Add First Slide
+            </Button>
+          </div>
         ) : (
           slides.map((slide) => (
             <div
