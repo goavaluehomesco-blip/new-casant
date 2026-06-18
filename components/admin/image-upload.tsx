@@ -68,8 +68,8 @@ export default function ImageUpload({
       return
     }
 
-    if (file.size > 2 * 1024 * 1024) {
-      setError("File size must be less than 2MB")
+    if (file.size > 500 * 1024) {
+      setError("File size must be less than 500KB")
       return
     }
 
@@ -179,7 +179,7 @@ export default function ImageUpload({
                     Click or drag to upload
                   </p>
                   <p className="text-xs text-slate-400 mt-1">
-                    JPEG, PNG, GIF, WebP up to 2MB
+                    JPEG, PNG, GIF, WebP up to 500KB
                   </p>
                 </div>
               </>
