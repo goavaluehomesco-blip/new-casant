@@ -8,7 +8,7 @@ export default async function AdminTestimonialsPage() {
   const supabase = await createClient()
   const { data: testimonials } = await supabase
     .from("testimonials")
-    .select("id, client_name, client_title, quote, background_image_url, display_order, is_active, created_at, updated_at")
+    .select("id, client_name, client_role, client_company, client_image_url, testimonial_text, rating, event_type, is_featured, is_active, display_order, created_at, updated_at")
     .order("display_order")
 
   return (

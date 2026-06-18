@@ -16,9 +16,13 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
     {
       id: "1",
       client_name: "Nikita & Subohjeet",
-      client_title: "Wedding · Goa",
-      quote: "I am still in shock at how beautiful our wedding looked. Walking into the venue for the first time felt like stepping into a literal fairytale. Casant Events took every disorganized idea I had and turned it into a breathtaking reality. From the stunning floral arrangements to the way the lighting changed the entire mood of the room, everything was perfection.",
-      background_image_url: null,
+      client_role: "Bride",
+      client_company: "Wedding · Goa",
+      client_image_url: null,
+      testimonial_text: "I am still in shock at how beautiful our wedding looked. Walking into the venue for the first time felt like stepping into a literal fairytale. Casant Events took every disorganized idea I had and turned it into a breathtaking reality. From the stunning floral arrangements to the way the lighting changed the entire mood of the room, everything was perfection.",
+      rating: 5,
+      event_type: "Wedding",
+      is_featured: true,
       is_active: true,
       display_order: 1,
       created_at: "",
@@ -50,9 +54,9 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
       <div
         className={`absolute inset-0 transition-opacity duration-500 ${isAnimating ? "opacity-0" : "opacity-100"}`}
       >
-        {item.background_image_url ? (
+        {item.client_image_url ? (
           <Image
-            src={item.background_image_url}
+            src={item.client_image_url}
             alt=""
             fill
             className="object-cover"
@@ -72,12 +76,14 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
           <div className={`transition-all duration-500 ${isAnimating ? "opacity-0 translate-y-4" : "opacity-100 translate-y-0"}`}>
             <span className="text-white/50 text-6xl font-serif leading-none select-none">"</span>
             <p className="text-white/90 text-lg md:text-xl italic leading-relaxed font-light -mt-4 mb-8 max-w-2xl">
-              {item.quote}
+              {item.testimonial_text}
             </p>
             <div>
               <p className="text-white font-bold text-sm tracking-widest uppercase">{item.client_name}</p>
-              {item.client_title && (
-                <p className="text-white/60 text-xs tracking-wide mt-1">{item.client_title}</p>
+              {(item.client_role || item.client_company) && (
+                <p className="text-white/60 text-xs tracking-wide mt-1">
+                  {[item.client_role, item.client_company].filter(Boolean).join(" · ")}
+                </p>
               )}
             </div>
           </div>
