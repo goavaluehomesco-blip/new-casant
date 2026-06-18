@@ -62,7 +62,7 @@ export default function SettingsManager({ companyInfo }: SettingsManagerProps) {
     address: companyInfo?.address || "",
     logo_url: companyInfo?.logo_url || "",
     divider_image_url: companyInfo?.divider_image_url || "",
-    track_record_images: companyInfo?.track_record_images || [],
+    track_record_images: Array.isArray(companyInfo?.track_record_images) ? companyInfo.track_record_images : [],
     social_facebook: companyInfo?.social_facebook || "",
     social_instagram: companyInfo?.social_instagram || "",
     social_linkedin: companyInfo?.social_linkedin || "",
@@ -88,7 +88,7 @@ export default function SettingsManager({ companyInfo }: SettingsManagerProps) {
         address: companyInfo.address || "",
         logo_url: companyInfo.logo_url || "",
         divider_image_url: companyInfo.divider_image_url || "",
-        track_record_images: companyInfo.track_record_images || [],
+        track_record_images: Array.isArray(companyInfo.track_record_images) ? companyInfo.track_record_images : [],
         social_facebook: companyInfo.social_facebook || "",
         social_instagram: companyInfo.social_instagram || "",
         social_linkedin: companyInfo.social_linkedin || "",
@@ -423,7 +423,7 @@ export default function SettingsManager({ companyInfo }: SettingsManagerProps) {
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-4 gap-3 mb-4">
-                  {formData.track_record_images.map((image, idx) => (
+                  {(Array.isArray(formData.track_record_images) ? formData.track_record_images : []).map((image, idx) => (
                     <div key={idx} className="relative group">
                       <div className="relative h-20 rounded overflow-hidden bg-[#0a0a0a]">
                         <img
@@ -445,9 +445,9 @@ export default function SettingsManager({ companyInfo }: SettingsManagerProps) {
                     </div>
                   ))}
                   {/* Empty slots up to 16 */}
-                  {[...Array(Math.max(0, 16 - formData.track_record_images.length))].map((_, i) => (
+                  {[...Array(Math.max(0, 16 - (Array.isArray(formData.track_record_images) ? formData.track_record_images.length : 0)))].map((_, i) => (
                     <div key={`empty-${i}`} className="h-20 rounded border-2 border-dashed border-white/10 bg-white/5 flex items-center justify-center text-white/25 text-xs">
-                      {formData.track_record_images.length + i + 1}
+                      {(Array.isArray(formData.track_record_images) ? formData.track_record_images.length : 0) + i + 1}
                     </div>
                   ))}
                 </div>
