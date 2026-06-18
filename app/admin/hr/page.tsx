@@ -7,16 +7,18 @@ export default async function AdminHrPage() {
   const { adminUser, unreadCount } = await requireAdminSession()
   const supabase = await createClient()
 
-  const [{ data: jobs }, { data: hrInfo }] = await Promise.all([
+  const [jobsResult, hrResult] = await Promise.all([
     supabase.from("job_postings").select("id, title, department, location, job_type, description, requirements, is_active, display_order, created_at, updated_at").order("display_order"),
-    supabase.from("hr_info").select("*").limit(1).single(),
+    supabase.from("hr_info").select("*").limit(1).maybeSingle(),
   ])
+  const jobs = jobsResult.error?.code === "PGRST205" ? [] : (jobsResult.data || [])
+  const hrInfo = hrResult.error?.code === "PGRST205" ? null : (hrResult.data || null)
 
   return (
     <div className="min-h-screen bg-slate-50">
       <AdminSidebar user={adminUser} unreadCount={unreadCount} />
       <div className="lg:pl-64">
-        <HrManager jobPostings={jobs || []} hrInfo={hrInfo || null} />
+        <HrManager jobPostings={jobs} hrInfo={hrInfo} />
       </div>
     </div>
   )

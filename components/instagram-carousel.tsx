@@ -60,7 +60,7 @@ export function InstagramCarousel({ posts, companyInfo }: InstagramCarouselProps
           {repeated.map((post, i) => (
             <a
               key={`${post.id}-${i}`}
-              href={post.post_url || instagramUrl || "#"}
+              href={instagramUrl || "#"}
               target="_blank"
               rel="noopener noreferrer"
               className="relative flex-shrink-0 w-52 h-52 md:w-64 md:h-64 rounded-xl overflow-hidden group"

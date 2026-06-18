@@ -20,18 +20,18 @@ export default function InstagramManager({ posts: initial }: InstagramManagerPro
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [editing, setEditing] = useState<InstagramPost | null>(null)
   const [saving, setSaving] = useState(false)
-  const [form, setForm] = useState({ image_url: "", caption: "", post_url: "" })
+  const [form, setForm] = useState({ image_url: "", caption: "" })
   const supabase = createClient()
 
   const openNew = () => {
     setEditing(null)
-    setForm({ image_url: "", caption: "", post_url: "" })
+    setForm({ image_url: "", caption: "" })
     setIsDialogOpen(true)
   }
 
   const openEdit = (item: InstagramPost) => {
     setEditing(item)
-    setForm({ image_url: item.image_url, caption: item.caption || "", post_url: item.post_url || "" })
+    setForm({ image_url: item.image_url, caption: item.caption || "" })
     setIsDialogOpen(true)
   }
 
@@ -40,13 +40,12 @@ export default function InstagramManager({ posts: initial }: InstagramManagerPro
     const payload = {
       image_url: form.image_url,
       caption: form.caption || null,
-      post_url: form.post_url || null,
     }
     if (editing) {
-      const { data } = await supabase.from("instagram_posts").update(payload).eq("id", editing.id).select().single()
+      const { data } = await supabase.from("instagram_feed").update(payload).eq("id", editing.id).select().single()
       if (data) setItems(items.map(i => i.id === editing.id ? data : i))
     } else {
-      const { data } = await supabase.from("instagram_posts").insert({ ...payload, display_order: items.length }).select().single()
+      const { data } = await supabase.from("instagram_feed").insert({ ...payload, display_order: items.length }).select().single()
       if (data) setItems([...items, data])
     }
     setSaving(false)
@@ -55,12 +54,12 @@ export default function InstagramManager({ posts: initial }: InstagramManagerPro
 
   const handleDelete = async (id: string) => {
     if (!confirm("Delete this post?")) return
-    await supabase.from("instagram_posts").delete().eq("id", id)
+    await supabase.from("instagram_feed").delete().eq("id", id)
     setItems(items.filter(i => i.id !== id))
   }
 
   const toggleActive = async (item: InstagramPost) => {
-    const { data } = await supabase.from("instagram_posts").update({ is_active: !item.is_active }).eq("id", item.id).select().single()
+    const { data } = await supabase.from("instagram_feed").update({ is_active: !item.is_active }).eq("id", item.id).select().single()
     if (data) setItems(items.map(i => i.id === item.id ? data : i))
   }
 
@@ -123,10 +122,6 @@ export default function InstagramManager({ posts: initial }: InstagramManagerPro
             <div className="grid gap-2">
               <Label>Caption</Label>
               <Textarea value={form.caption} onChange={e => setForm({ ...form, caption: e.target.value })} rows={2} placeholder="Optional caption..." />
-            </div>
-            <div className="grid gap-2">
-              <Label>Instagram Post URL</Label>
-              <Input value={form.post_url} onChange={e => setForm({ ...form, post_url: e.target.value })} placeholder="https://instagram.com/p/..." />
             </div>
             <div className="flex gap-2 pt-2">
               <Button variant="outline" className="flex-1" onClick={() => setIsDialogOpen(false)}>Cancel</Button>

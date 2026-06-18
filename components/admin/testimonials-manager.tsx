@@ -20,12 +20,12 @@ export default function TestimonialsManager({ testimonials: initial }: Testimoni
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [editing, setEditing] = useState<Testimonial | null>(null)
   const [saving, setSaving] = useState(false)
-  const [form, setForm] = useState({ client_name: "", client_title: "", quote: "", background_image_url: "" })
+  const [form, setForm] = useState({ client_name: "", client_role: "", client_company: "", client_image_url: "", testimonial_text: "", rating: "5", event_type: "" })
   const supabase = createClient()
 
   const openNew = () => {
     setEditing(null)
-    setForm({ client_name: "", client_title: "", quote: "", background_image_url: "" })
+    setForm({ client_name: "", client_role: "", client_company: "", client_image_url: "", testimonial_text: "", rating: "5", event_type: "" })
     setIsDialogOpen(true)
   }
 
@@ -33,9 +33,12 @@ export default function TestimonialsManager({ testimonials: initial }: Testimoni
     setEditing(item)
     setForm({
       client_name: item.client_name,
-      client_title: item.client_title || "",
-      quote: item.quote,
-      background_image_url: item.background_image_url || "",
+      client_role: item.client_role || "",
+      client_company: item.client_company || "",
+      client_image_url: item.client_image_url || "",
+      testimonial_text: item.testimonial_text,
+      rating: String(item.rating ?? 5),
+      event_type: item.event_type || "",
     })
     setIsDialogOpen(true)
   }
@@ -44,9 +47,12 @@ export default function TestimonialsManager({ testimonials: initial }: Testimoni
     setSaving(true)
     const payload = {
       client_name: form.client_name,
-      client_title: form.client_title || null,
-      quote: form.quote,
-      background_image_url: form.background_image_url || null,
+      client_role: form.client_role || null,
+      client_company: form.client_company || null,
+      client_image_url: form.client_image_url || null,
+      testimonial_text: form.testimonial_text,
+      rating: form.rating ? Number(form.rating) : null,
+      event_type: form.event_type || null,
     }
 
     if (editing) {
@@ -87,8 +93,8 @@ export default function TestimonialsManager({ testimonials: initial }: Testimoni
         )}
         {items.map(item => (
           <div key={item.id} className="bg-white rounded-xl border border-slate-200 p-5 flex gap-4 items-start">
-            {item.background_image_url ? (
-              <img src={item.background_image_url} alt="" className="w-16 h-16 rounded-lg object-cover flex-shrink-0" />
+            {item.client_image_url ? (
+              <img src={item.client_image_url} alt="" className="w-16 h-16 rounded-lg object-cover flex-shrink-0" />
             ) : (
               <div className="w-16 h-16 rounded-lg bg-slate-100 flex items-center justify-center flex-shrink-0">
                 <Quote className="w-6 h-6 text-slate-400" />
@@ -97,9 +103,10 @@ export default function TestimonialsManager({ testimonials: initial }: Testimoni
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-1">
                 <span className="font-semibold text-slate-900">{item.client_name}</span>
-                {item.client_title && <span className="text-xs text-slate-400">{item.client_title}</span>}
+                {item.client_role && <span className="text-xs text-slate-400">{item.client_role}</span>}
+                {item.client_company && <span className="text-xs text-slate-400">{item.client_company}</span>}
               </div>
-              <p className="text-slate-500 text-sm line-clamp-2 italic">"{item.quote}"</p>
+              <p className="text-slate-500 text-sm line-clamp-2 italic">"{item.testimonial_text}"</p>
             </div>
             <div className="flex items-center gap-2 flex-shrink-0">
               <button onClick={() => toggleActive(item)} className="text-slate-400 hover:text-primary transition-colors" title={item.is_active ? "Active" : "Inactive"}>
@@ -122,27 +129,43 @@ export default function TestimonialsManager({ testimonials: initial }: Testimoni
               <Label>Client Name *</Label>
               <Input value={form.client_name} onChange={e => setForm({ ...form, client_name: e.target.value })} placeholder="Nikita & Subohjeet" />
             </div>
-            <div className="grid gap-2">
-              <Label>Client Title / Event</Label>
-              <Input value={form.client_title} onChange={e => setForm({ ...form, client_title: e.target.value })} placeholder="Wedding · Goa" />
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="grid gap-2">
+                <Label>Role / Title</Label>
+                <Input value={form.client_role} onChange={e => setForm({ ...form, client_role: e.target.value })} placeholder="Bride" />
+              </div>
+              <div className="grid gap-2">
+                <Label>Company / Event</Label>
+                <Input value={form.client_company} onChange={e => setForm({ ...form, client_company: e.target.value })} placeholder="Wedding · Goa" />
+              </div>
+            </div>
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="grid gap-2">
+                <Label>Event Type</Label>
+                <Input value={form.event_type} onChange={e => setForm({ ...form, event_type: e.target.value })} placeholder="Wedding" />
+              </div>
+              <div className="grid gap-2">
+                <Label>Rating (1–5)</Label>
+                <Input type="number" min="1" max="5" value={form.rating} onChange={e => setForm({ ...form, rating: e.target.value })} placeholder="5" />
+              </div>
             </div>
             <div className="grid gap-2">
-              <Label>Quote *</Label>
-              <Textarea value={form.quote} onChange={e => setForm({ ...form, quote: e.target.value })} rows={5} placeholder="Their testimonial..." />
+              <Label>Testimonial *</Label>
+              <Textarea value={form.testimonial_text} onChange={e => setForm({ ...form, testimonial_text: e.target.value })} rows={4} placeholder="Their testimonial..." />
             </div>
             <div className="grid gap-2">
-              <Label>Background Image</Label>
+              <Label>Client Photo</Label>
               <ImageUpload
-                value={form.background_image_url}
-                onChange={(url) => setForm({ ...form, background_image_url: url })}
+                value={form.client_image_url}
+                onChange={(url) => setForm({ ...form, client_image_url: url })}
                 folder="testimonials"
-                aspectRatio="video"
-                label="Background Image"
+                aspectRatio="square"
+                label="Client Photo"
               />
             </div>
             <div className="flex gap-2 pt-2">
               <Button variant="outline" className="flex-1" onClick={() => setIsDialogOpen(false)}>Cancel</Button>
-              <Button className="flex-1" onClick={handleSave} disabled={saving || !form.client_name || !form.quote}>
+              <Button className="flex-1" onClick={handleSave} disabled={saving || !form.client_name || !form.testimonial_text}>
                 {saving ? "Saving..." : "Save"}
               </Button>
             </div>

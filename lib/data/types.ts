@@ -150,9 +150,13 @@ export interface ContactSubmission {
 export interface Testimonial {
   id: string
   client_name: string
-  client_title: string | null
-  quote: string
-  background_image_url: string | null
+  client_role: string | null
+  client_company: string | null
+  client_image_url: string | null
+  testimonial_text: string
+  rating: number | null
+  event_type: string | null
+  is_featured: boolean
   is_active: boolean
   display_order: number
   created_at: string
@@ -163,11 +167,9 @@ export interface InstagramPost {
   id: string
   image_url: string
   caption: string | null
-  post_url: string | null
   is_active: boolean
   display_order: number
   created_at: string
-  updated_at: string
 }
 
 export interface JobPosting {

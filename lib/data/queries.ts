@@ -262,7 +262,7 @@ async function _getActiveTestimonials(): Promise<Testimonial[]> {
   const supabase = createUnauthenticatedClient()
   const { data, error } = await supabase
     .from("testimonials")
-    .select("id, client_name, client_title, quote, background_image_url, display_order, is_active, created_at, updated_at")
+    .select("id, client_name, client_role, client_company, client_image_url, testimonial_text, rating, event_type, is_featured, is_active, display_order, created_at, updated_at")
     .eq("is_active", true)
     .order("display_order", { ascending: true })
     .limit(12)
@@ -279,8 +279,8 @@ export const getActiveTestimonials = unstable_cache(
 async function _getActiveInstagramPosts(): Promise<InstagramPost[]> {
   const supabase = createUnauthenticatedClient()
   const { data, error } = await supabase
-    .from("instagram_posts")
-    .select("id, image_url, caption, post_url, display_order, is_active, created_at, updated_at")
+    .from("instagram_feed")
+    .select("id, image_url, caption, display_order, is_active, created_at")
     .eq("is_active", true)
     .order("display_order", { ascending: true })
     .limit(9)
@@ -293,7 +293,7 @@ export const getActiveInstagramPosts = unstable_cache(
   { revalidate: 1800, tags: ["instagram-posts"] }
 )
 
-// Job Postings
+// Job Postings — table may not exist yet; returns [] safely
 async function _getActiveJobPostings(): Promise<JobPosting[]> {
   const supabase = createUnauthenticatedClient()
   const { data, error } = await supabase
@@ -301,7 +301,11 @@ async function _getActiveJobPostings(): Promise<JobPosting[]> {
     .select("id, title, department, location, job_type, description, requirements, is_active, display_order, created_at, updated_at")
     .eq("is_active", true)
     .order("display_order", { ascending: true })
-  if (error) { console.error("Error fetching job postings:", error); return [] }
+  if (error) {
+    if (error.code === "PGRST205" || error.message?.includes("schema cache")) return []
+    console.error("Error fetching job postings:", error)
+    return []
+  }
   return (data || []) as JobPosting[]
 }
 export const getActiveJobPostings = unstable_cache(
@@ -310,11 +314,15 @@ export const getActiveJobPostings = unstable_cache(
   { revalidate: 3600, tags: ["job-postings"] }
 )
 
-// HR Info
+// HR Info — table may not exist yet; returns null safely
 async function _getHrInfo(): Promise<HrInfo | null> {
   const supabase = createUnauthenticatedClient()
   const { data, error } = await supabase.from("hr_info").select("*").limit(1).single()
-  if (error) { console.error("Error fetching HR info:", error); return null }
+  if (error) {
+    if (error.code === "PGRST205" || error.message?.includes("schema cache")) return null
+    console.error("Error fetching HR info:", error)
+    return null
+  }
   return data
 }
 export const getHrInfo = unstable_cache(
