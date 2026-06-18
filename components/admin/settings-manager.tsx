@@ -62,7 +62,7 @@ export default function SettingsManager({ companyInfo }: SettingsManagerProps) {
     address: companyInfo?.address || "",
     logo_url: companyInfo?.logo_url || "",
     divider_image_url: companyInfo?.divider_image_url || "",
-    track_record_images: companyInfo?.track_record_images || [],
+    track_record_images: Array.isArray(companyInfo?.track_record_images) ? companyInfo.track_record_images : [],
     social_facebook: companyInfo?.social_facebook || "",
     social_instagram: companyInfo?.social_instagram || "",
     social_linkedin: companyInfo?.social_linkedin || "",
@@ -88,7 +88,7 @@ export default function SettingsManager({ companyInfo }: SettingsManagerProps) {
         address: companyInfo.address || "",
         logo_url: companyInfo.logo_url || "",
         divider_image_url: companyInfo.divider_image_url || "",
-        track_record_images: companyInfo.track_record_images || [],
+        track_record_images: Array.isArray(companyInfo.track_record_images) ? companyInfo.track_record_images : [],
         social_facebook: companyInfo.social_facebook || "",
         social_instagram: companyInfo.social_instagram || "",
         social_linkedin: companyInfo.social_linkedin || "",
@@ -423,31 +423,31 @@ export default function SettingsManager({ companyInfo }: SettingsManagerProps) {
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-4 gap-3 mb-4">
-                  {[...Array(16)].map((_, i) => (
-                    <div key={i} className="relative group">
-                      {formData.track_record_images[i] ? (
-                        <div className="relative h-20 rounded overflow-hidden bg-[#0a0a0a]">
-                          <img
-                            src={formData.track_record_images[i]}
-                            alt={`Collage ${i + 1}`}
-                            className="w-full h-full object-cover"
-                          />
-                          <button
-                            type="button"
-                            onClick={() => {
-                              const updated = formData.track_record_images.filter((_, idx) => idx !== i)
-                              setFormData({ ...formData, track_record_images: updated })
-                            }}
-                            className="absolute top-1 right-1 bg-red-500/80 hover:bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center transition-colors"
-                          >
-                            <Trash2 className="w-3 h-3" />
-                          </button>
-                        </div>
-                      ) : (
-                        <div className="h-20 rounded border-2 border-dashed border-white/10 bg-white/5 flex items-center justify-center text-white/25 text-xs">
-                          {i + 1}
-                        </div>
-                      )}
+                  {(Array.isArray(formData.track_record_images) ? formData.track_record_images : []).map((image, idx) => (
+                    <div key={idx} className="relative group">
+                      <div className="relative h-20 rounded overflow-hidden bg-[#0a0a0a]">
+                        <img
+                          src={image}
+                          alt={`Collage ${idx + 1}`}
+                          className="w-full h-full object-cover"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const updated = formData.track_record_images.filter((_, itemIdx) => itemIdx !== idx)
+                            setFormData({ ...formData, track_record_images: updated })
+                          }}
+                          className="absolute top-1 right-1 bg-red-500/80 hover:bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center transition-colors"
+                        >
+                          <Trash2 className="w-3 h-3" />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                  {/* Empty slots up to 16 */}
+                  {[...Array(Math.max(0, 16 - (Array.isArray(formData.track_record_images) ? formData.track_record_images.length : 0)))].map((_, i) => (
+                    <div key={`empty-${i}`} className="h-20 rounded border-2 border-dashed border-white/10 bg-white/5 flex items-center justify-center text-white/25 text-xs">
+                      {(Array.isArray(formData.track_record_images) ? formData.track_record_images.length : 0) + i + 1}
                     </div>
                   ))}
                 </div>
