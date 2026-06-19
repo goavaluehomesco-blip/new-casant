@@ -22,6 +22,7 @@ import {
   Images,
   DatabaseZap,
   ExternalLink,
+  Star,
 } from "lucide-react"
 
 interface AdminSidebarProps {
@@ -48,6 +49,7 @@ const navSections = [
       { icon: Building2, label: "Corporate Events", href: "/admin/corporate" },
       { icon: Images, label: "Gallery", href: "/admin/gallery" },
       { icon: Quote, label: "Testimonials", href: "/admin/testimonials" },
+      { icon: Star, label: "Clientele", href: "/admin/clientele" },
       { icon: Instagram, label: "Instagram", href: "/admin/instagram" },
     ],
   },
