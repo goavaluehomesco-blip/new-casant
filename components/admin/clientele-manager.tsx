@@ -209,7 +209,7 @@ export default function ClienteleManager({ clientele: initial }: ClienteleManage
                 value={form.image_url}
                 onChange={(url) => setForm({ ...form, image_url: url })}
                 folder="clientele"
-                aspectRatio="wide"
+                aspectRatio="video"
                 label="Logo (transparent PNG or SVG recommended)"
               />
             </div>
