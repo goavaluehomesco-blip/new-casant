@@ -15,6 +15,7 @@ import type {
   JobPosting,
   HrInfo,
   ServiceImage,
+  Clientele,
 } from "./types"
 
 // Hero Slides
@@ -329,6 +330,27 @@ export const getHrInfo = unstable_cache(
   _getHrInfo,
   ["hr-info"],
   { revalidate: 7200, tags: ["hr-info"] }
+)
+
+// Clientele — table may not exist until SQL is run; returns [] safely
+async function _getActiveClientele(): Promise<Clientele[]> {
+  const supabase = createUnauthenticatedClient()
+  const { data, error } = await supabase
+    .from("clientele")
+    .select("id, name, image_url, website_url, is_active, display_order, created_at, updated_at")
+    .eq("is_active", true)
+    .order("display_order", { ascending: true })
+  if (error) {
+    if (error.code === "PGRST205" || error.message?.includes("schema cache") || error.message?.includes("does not exist")) return []
+    console.error("Error fetching clientele:", error)
+    return []
+  }
+  return (data || []) as Clientele[]
+}
+export const getActiveClientele = unstable_cache(
+  _getActiveClientele,
+  ["clientele"],
+  { revalidate: 3600, tags: ["clientele"] }
 )
 
 // Service Images
