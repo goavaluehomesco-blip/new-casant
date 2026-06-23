@@ -1,22 +1,12 @@
 "use client"
 
-import { useRef } from "react"
 import type { Clientele } from "@/lib/data/types"
 
 interface ClienteleProps {
   clients: Clientele[]
 }
 
-const FALLBACK: Clientele[] = [
-  { id: "1", name: "Taj Hotels",      image_url: null, website_url: null, is_active: true, display_order: 1, created_at: "", updated_at: "" },
-  { id: "2", name: "ITC Hotels",      image_url: null, website_url: null, is_active: true, display_order: 2, created_at: "", updated_at: "" },
-  { id: "3", name: "Marriott",         image_url: null, website_url: null, is_active: true, display_order: 3, created_at: "", updated_at: "" },
-  { id: "4", name: "Oberoi Group",     image_url: null, website_url: null, is_active: true, display_order: 4, created_at: "", updated_at: "" },
-  { id: "5", name: "Leela Palaces",    image_url: null, website_url: null, is_active: true, display_order: 5, created_at: "", updated_at: "" },
-  { id: "6", name: "Hyatt Regency",    image_url: null, website_url: null, is_active: true, display_order: 6, created_at: "", updated_at: "" },
-  { id: "7", name: "Hilton",           image_url: null, website_url: null, is_active: true, display_order: 7, created_at: "", updated_at: "" },
-  { id: "8", name: "Four Seasons",     image_url: null, website_url: null, is_active: true, display_order: 8, created_at: "", updated_at: "" },
-]
+
 
 function ClientCard({ client }: { client: Clientele }) {
   const inner = (
@@ -57,10 +47,9 @@ function ClientCard({ client }: { client: Clientele }) {
 }
 
 export function Clientele({ clients }: ClienteleProps) {
-  const items = clients.length > 0 ? clients : FALLBACK
+  if (!clients || clients.length === 0) return null
 
-  // Duplicate items for seamless marquee loop
-  const marqueeItems = [...items, ...items]
+  const items = clients
 
   return (
     <section className="relative bg-[#080808] py-20 overflow-hidden">
