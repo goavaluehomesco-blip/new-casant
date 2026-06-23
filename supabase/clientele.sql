@@ -31,25 +31,31 @@ create trigger clientele_set_updated_at
 -- Enable Row Level Security
 alter table public.clientele enable row level security;
 
+-- Drop any existing policies first (safe to re-run)
+drop policy if exists "Public read clientele"          on public.clientele;
+drop policy if exists "Public insert clientele"        on public.clientele;
+drop policy if exists "Public update clientele"        on public.clientele;
+drop policy if exists "Public delete clientele"        on public.clientele;
+drop policy if exists "Authenticated insert clientele" on public.clientele;
+drop policy if exists "Authenticated update clientele" on public.clientele;
+drop policy if exists "Authenticated delete clientele" on public.clientele;
+
 -- Public read access (landing page can fetch without auth)
 create policy "Public read clientele"
   on public.clientele for select
   using (true);
 
--- Authenticated users (admin) can insert / update / delete
-create policy "Authenticated insert clientele"
+-- Open write access (anon key used by admin panel, matches all other tables)
+create policy "Public insert clientele"
   on public.clientele for insert
-  to authenticated
   with check (true);
 
-create policy "Authenticated update clientele"
+create policy "Public update clientele"
   on public.clientele for update
-  to authenticated
   using (true);
 
-create policy "Authenticated delete clientele"
+create policy "Public delete clientele"
   on public.clientele for delete
-  to authenticated
   using (true);
 
 -- Optional seed data — remove if you don't want sample rows
