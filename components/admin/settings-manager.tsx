@@ -129,35 +129,22 @@ export default function SettingsManager({ companyInfo }: SettingsManagerProps) {
         maintenance_mode: formData.maintenance_mode,
       }
 
-      let hadError = false
-
       if (companyInfo?.id) {
         const { error } = await supabase.from("company_info").update(payload).eq("id", companyInfo.id)
         if (error) {
-          hadError = true
-          // Column doesn't exist yet — fall back without the new columns and show a helpful message
-          if (error.message?.includes("column") || error.code === "42703") {
-            const { name, tagline, about_short, about_full, years_experience, clients_count, projects_count, hotels_count, email, phone, address, logo_url, social_facebook, social_instagram, social_linkedin, social_youtube } = payload
-            const { error: fallbackError } = await supabase.from("company_info").update({ name, tagline, about_short, about_full, years_experience, clients_count, projects_count, hotels_count, email, phone, address, logo_url, social_facebook, social_instagram, social_linkedin, social_youtube }).eq("id", companyInfo.id)
-            if (fallbackError) throw fallbackError
-            hadError = false
-            setError("Saved (partial) — run the migration SQL in Supabase to enable Images & Site settings.")
-          } else {
-            throw error
-          }
+          console.log("[v0] Settings save error:", error.code, error.message)
+          throw error
         }
       } else {
         const { error } = await supabase.from("company_info").insert(payload)
         if (error) throw error
       }
 
-      if (!hadError) {
-        setError(null)
-        setSaved(true)
-        await revalidateCompanyInfo()
-        router.refresh()
-        setTimeout(() => setSaved(false), 3000)
-      }
+      setError(null)
+      setSaved(true)
+      await revalidateCompanyInfo()
+      router.refresh()
+      setTimeout(() => setSaved(false), 3000)
     } catch (err: unknown) {
       const msg = err instanceof Error
         ? err.message
