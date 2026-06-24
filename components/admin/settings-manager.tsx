@@ -131,10 +131,7 @@ export default function SettingsManager({ companyInfo }: SettingsManagerProps) {
 
       if (companyInfo?.id) {
         const { error } = await supabase.from("company_info").update(payload).eq("id", companyInfo.id)
-        if (error) {
-          console.log("[v0] Settings save error:", error.code, error.message)
-          throw error
-        }
+        if (error) throw error
       } else {
         const { error } = await supabase.from("company_info").insert(payload)
         if (error) throw error

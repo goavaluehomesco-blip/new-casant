@@ -3,7 +3,6 @@
 import { useEffect, useState, useRef } from "react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import Image from "next/image"
 import type { CompanyInfo } from "@/lib/data/types"
 
 interface TrackRecordProps {
@@ -42,7 +41,7 @@ export function TrackRecord({ companyInfo }: TrackRecordProps) {
     { value: `${companyInfo?.hotels_count || 100}+`, label: "Hotels" },
   ]
 
-  const collageImages: string[] = companyInfo?.track_record_images?.length
+  const collageImages: string[] = Array.isArray(companyInfo?.track_record_images) && companyInfo.track_record_images.length > 0
     ? companyInfo.track_record_images
     : []
 
@@ -60,12 +59,11 @@ export function TrackRecord({ companyInfo }: TrackRecordProps) {
                 {[...Array(16)].map((_, i) => (
                   <div key={i} className="relative overflow-hidden bg-slate-100">
                     {collageImages[i] ? (
-                      <Image
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
                         src={collageImages[i]}
                         alt=""
-                        fill
-                        className="object-cover"
-                        sizes="10vw"
+                        className="w-full h-full object-cover"
                         loading="lazy"
                       />
                     ) : (
