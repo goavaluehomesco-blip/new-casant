@@ -57,17 +57,17 @@ export function TrackRecord({ companyInfo }: TrackRecordProps) {
             <div className="relative aspect-square max-w-lg mx-auto">
               <div className="grid grid-cols-4 gap-1 absolute inset-0">
                 {[...Array(16)].map((_, i) => (
-                  <div key={i} className="relative overflow-hidden bg-slate-100">
+                  <div key={i} className="relative aspect-square overflow-hidden bg-slate-100">
                     {collageImages[i] ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img
                         src={collageImages[i]}
                         alt=""
-                        className="w-full h-full object-cover"
+                        className="absolute inset-0 w-full h-full object-cover"
                         loading="lazy"
                       />
                     ) : (
-                      <div className="w-full h-full bg-slate-200" />
+                      <div className="absolute inset-0 bg-slate-200" />
                     )}
                   </div>
                 ))}
