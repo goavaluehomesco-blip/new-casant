@@ -250,6 +250,13 @@ async function _getCompanyInfo(): Promise<CompanyInfo | null> {
     console.error("Error fetching company info:", error)
     return null
   }
+  if (data) {
+    // Supabase may return JSONB arrays as a raw JSON string — parse it if so
+    if (typeof data.track_record_images === "string") {
+      try { data.track_record_images = JSON.parse(data.track_record_images) } catch { data.track_record_images = [] }
+    }
+    if (!Array.isArray(data.track_record_images)) data.track_record_images = []
+  }
   return data
 }
 export const getCompanyInfo = unstable_cache(
