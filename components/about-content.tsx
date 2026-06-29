@@ -237,12 +237,11 @@ export function AboutContent({ teamMembers, companyInfo }: AboutContentProps) {
                 className="overflow-hidden rounded-2xl border border-border shadow-xl hover:shadow-2xl transition-all duration-500"
               >
                 <div className="relative h-80 overflow-hidden">
-                  <Image
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
                     src={director.image_url || "/placeholder.svg?height=320&width=400"}
                     alt={director.name}
-                    fill
-                    className="object-cover hover:scale-105 transition-transform duration-500"
-                    sizes="(max-width: 768px) 100vw, 33vw"
+                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
                     loading="lazy"
                   />
                 </div>
