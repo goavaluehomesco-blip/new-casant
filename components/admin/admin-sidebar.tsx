@@ -23,6 +23,7 @@ import {
   DatabaseZap,
   ExternalLink,
   Star,
+  BookOpen,
 } from "lucide-react"
 
 interface AdminSidebarProps {
@@ -44,6 +45,7 @@ const navSections = [
     label: "Content",
     items: [
       { icon: Home, label: "Hero Section", href: "/admin/hero" },
+      { icon: BookOpen, label: "About", href: "/admin/about" },
       { icon: Layers, label: "Services", href: "/admin/services" },
       { icon: Heart, label: "Weddings", href: "/admin/weddings" },
       { icon: Building2, label: "Corporate Events", href: "/admin/corporate" },
