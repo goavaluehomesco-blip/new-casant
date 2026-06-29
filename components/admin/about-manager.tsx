@@ -9,6 +9,7 @@ import type { CompanyInfo } from "@/lib/data/types"
 import { createClient } from "@/lib/supabase/client"
 import { useRouter } from "next/navigation"
 import { revalidateCompanyInfo } from "@/lib/actions/revalidate"
+import { ImageUpload } from "@/components/admin/image-upload"
 
 interface AboutManagerProps {
   companyInfo: CompanyInfo | null
@@ -26,6 +27,8 @@ export default function AboutManager({ companyInfo }: AboutManagerProps) {
     clients_count: companyInfo?.clients_count || 1000,
     projects_count: companyInfo?.projects_count || 1000,
     hotels_count: companyInfo?.hotels_count || 100,
+    about_hero_image_url: companyInfo?.about_hero_image_url || "",
+    about_story_image_url: companyInfo?.about_story_image_url || "",
   })
 
   const [saved, setSaved] = useState(false)
@@ -124,6 +127,43 @@ export default function AboutManager({ companyInfo }: AboutManagerProps) {
               placeholder="Detailed company story and background..."
               rows={6}
               className="bg-white/5 border-white/10 text-white placeholder:text-white/30 resize-none"
+            />
+          </div>
+        </div>
+
+        {/* Images */}
+        <div className="bg-[#161616] border border-white/10 rounded-xl p-6 space-y-6">
+          <h2 className="text-xl font-bold text-white mb-2">About Page Images</h2>
+
+          <div>
+            <label className="block text-sm font-medium text-white mb-1">
+              Hero Background Image
+            </label>
+            <p className="text-xs text-white/40 mb-3">
+              Full-width banner shown at the top of the About page
+            </p>
+            <ImageUpload
+              value={formData.about_hero_image_url}
+              onChange={(url) => setFormData({ ...formData, about_hero_image_url: url })}
+              folder="about"
+              aspectRatio="video"
+              label="Hero background photo"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-white mb-1">
+              Our Story Section Image
+            </label>
+            <p className="text-xs text-white/40 mb-3">
+              Photo shown beside the company story text
+            </p>
+            <ImageUpload
+              value={formData.about_story_image_url}
+              onChange={(url) => setFormData({ ...formData, about_story_image_url: url })}
+              folder="about"
+              aspectRatio="square"
+              label="Story section photo"
             />
           </div>
         </div>
