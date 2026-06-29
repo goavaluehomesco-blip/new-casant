@@ -9,7 +9,7 @@ import type { CompanyInfo } from "@/lib/data/types"
 import { createClient } from "@/lib/supabase/client"
 import { useRouter } from "next/navigation"
 import { revalidateCompanyInfo } from "@/lib/actions/revalidate"
-import { ImageUpload } from "@/components/admin/image-upload"
+import ImageUpload from "@/components/admin/image-upload"
 
 interface AboutManagerProps {
   companyInfo: CompanyInfo | null
