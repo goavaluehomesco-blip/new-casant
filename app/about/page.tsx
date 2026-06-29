@@ -12,7 +12,7 @@ export default async function AboutPage() {
   const [teamMembers, companyInfo, navigation] = await Promise.all([
     getActiveTeamMembers(),
     getCompanyInfo(),
-    NavigationWrapper({}),
+    NavigationWrapper({ variant: "dark" }),
   ])
 
   return (

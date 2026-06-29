@@ -4,7 +4,6 @@ import { useEffect, useState, useRef } from "react"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import Image from "next/image"
 import { CheckCircle2 } from "lucide-react"
 import type { TeamMember, CompanyInfo } from "@/lib/data/types"
 
@@ -96,14 +95,16 @@ export function AboutContent({ teamMembers, companyInfo }: AboutContentProps) {
       {/* Hero Section */}
       <section className="relative py-32 overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <Image
-            src="/event-team-working-behind-scenes.jpg"
-            alt="Casant Events Team"
-            fill
-            className="object-cover"
-            sizes="100vw"
-            priority
-          />
+          {companyInfo?.about_hero_image_url ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={companyInfo.about_hero_image_url}
+              alt="Casant Events Team"
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <div className="w-full h-full bg-gradient-to-br from-slate-800 to-slate-600" />
+          )}
           <div className="absolute inset-0 bg-gradient-to-r from-foreground/90 via-foreground/70 to-foreground/50" />
         </div>
         <div className="container mx-auto px-6 relative z-10">
@@ -164,15 +165,19 @@ export function AboutContent({ teamMembers, companyInfo }: AboutContentProps) {
               }`}
             >
               <div className="relative">
-                <Image
-                  src="/event-setup-behind-scenes-team.jpg"
-                  alt="Casant Events Setup"
-                  width={600}
-                  height={600}
-                  className="rounded-2xl shadow-2xl w-full h-auto"
-                  sizes="(max-width: 1024px) 100vw, 50vw"
-                  loading="lazy"
-                />
+                {companyInfo?.about_story_image_url ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={companyInfo.about_story_image_url}
+                    alt="Casant Events Setup"
+                    className="rounded-2xl shadow-2xl w-full h-auto object-cover"
+                    loading="lazy"
+                  />
+                ) : (
+                  <div className="rounded-2xl shadow-2xl w-full aspect-square bg-slate-100 flex items-center justify-center text-slate-400 text-sm">
+                    No image uploaded
+                  </div>
+                )}
                 <div className="absolute -bottom-8 -left-8 bg-primary text-primary-foreground p-8 rounded-2xl shadow-xl">
                   <div className="text-5xl font-bold">{yearsInBusiness}+</div>
                   <div className="text-sm font-medium">Years Experience</div>
@@ -232,12 +237,11 @@ export function AboutContent({ teamMembers, companyInfo }: AboutContentProps) {
                 className="overflow-hidden rounded-2xl border border-border shadow-xl hover:shadow-2xl transition-all duration-500"
               >
                 <div className="relative h-80 overflow-hidden">
-                  <Image
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
                     src={director.image_url || "/placeholder.svg?height=320&width=400"}
                     alt={director.name}
-                    fill
-                    className="object-cover hover:scale-105 transition-transform duration-500"
-                    sizes="(max-width: 768px) 100vw, 33vw"
+                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
                     loading="lazy"
                   />
                 </div>
