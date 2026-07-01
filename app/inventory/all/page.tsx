@@ -1,7 +1,7 @@
 import { NavigationWrapper } from "@/components/navigation-wrapper"
 import { Footer } from "@/components/footer"
 import { AllEquipmentContent } from "@/components/all-equipment-content"
-import { getInventoryCategories, getInventoryByCategory } from "@/lib/data/queries"
+import { getInventoryCategories, getInventoryByCategory, getCompanyInfo } from "@/lib/data/queries"
 
 export const metadata = {
   title: "All Equipment - Casant Events",
@@ -9,9 +9,10 @@ export const metadata = {
 }
 
 export default async function AllEquipmentPage() {
-  const [categories, inventoryByCategory, navigation] = await Promise.all([
+  const [categories, inventoryByCategory, companyInfo, navigation] = await Promise.all([
     getInventoryCategories(),
     getInventoryByCategory(),
+    getCompanyInfo(),
     NavigationWrapper({ variant: "dark" }),
   ])
 
@@ -19,7 +20,7 @@ export default async function AllEquipmentPage() {
     <main className="min-h-screen">
       {navigation}
       <AllEquipmentContent categories={categories} inventoryByCategory={inventoryByCategory} />
-      <Footer />
+      <Footer companyInfo={companyInfo} />
     </main>
   )
 }

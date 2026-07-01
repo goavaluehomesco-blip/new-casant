@@ -20,7 +20,7 @@ export default async function InventoryPage() {
     <main className="min-h-screen">
       {navigation}
       <InventoryContent categories={categories} inventoryByCategory={inventoryByCategory} companyInfo={companyInfo} />
-      <Footer />
+      <Footer companyInfo={companyInfo} />
     </main>
   )
 }
