@@ -2,7 +2,6 @@
 
 import { useEffect, useState, useRef } from "react"
 import Link from "next/link"
-import Image from "next/image"
 import type { GalleryProject } from "@/lib/data/types"
 
 interface FeaturedWorkProps {
@@ -54,20 +53,22 @@ export function FeaturedWork({ projects }: FeaturedWorkProps) {
                 }`}
                 style={{ transitionDelay: `${index * 100}ms` }}
               >
-                {project.cover_image ? (
-                  <Image
-                    src={project.cover_image}
-                    alt={project.title}
-                    fill
-                    className="object-cover group-hover:scale-110 transition-transform duration-700"
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    loading="lazy"
-                  />
-                ) : (
-                  <div className="absolute inset-0 bg-muted flex items-center justify-center">
-                    <span className="text-muted-foreground text-sm">No image</span>
-                  </div>
-                )}
+                {(() => {
+                  const imgSrc = project.cover_image || project.images?.[0]?.image_url || null
+                  return imgSrc ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={imgSrc}
+                      alt={project.title}
+                      className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div className="absolute inset-0 bg-muted flex items-center justify-center">
+                      <span className="text-muted-foreground text-sm">No image</span>
+                    </div>
+                  )
+                })()}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent opacity-60 group-hover:opacity-90 transition-opacity duration-300" />
                 <div className="absolute bottom-0 left-0 right-0 p-5">
                   <h3 className="text-lg font-bold text-white">{project.title}</h3>
