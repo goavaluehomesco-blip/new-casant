@@ -19,7 +19,7 @@ export default async function AboutPage() {
     <main className="min-h-screen">
       {navigation}
       <AboutContent teamMembers={teamMembers} companyInfo={companyInfo} />
-      <Footer />
+      <Footer companyInfo={companyInfo} />
     </main>
   )
 }
