@@ -1,7 +1,7 @@
 import { NavigationWrapper } from "@/components/navigation-wrapper"
 import { Footer } from "@/components/footer"
 import { CorporateContent } from "@/components/corporate-content"
-import { getProjectsByCategorySlug, getGalleryCategoryBySlug } from "@/lib/data/queries"
+import { getProjectsByCategorySlug, getGalleryCategoryBySlug, getCompanyInfo } from "@/lib/data/queries"
 
 export const metadata = {
   title: "Corporate Events - Casant Events",
@@ -9,9 +9,10 @@ export const metadata = {
 }
 
 export default async function CorporatePage() {
-  const [projects, category, navigation] = await Promise.all([
+  const [projects, category, companyInfo, navigation] = await Promise.all([
     getProjectsByCategorySlug("corporate"),
     getGalleryCategoryBySlug("corporate"),
+    getCompanyInfo(),
     NavigationWrapper({}),
   ])
 
@@ -19,7 +20,7 @@ export default async function CorporatePage() {
     <main className="min-h-screen">
       {navigation}
       <CorporateContent projects={projects} category={category} />
-      <Footer />
+      <Footer companyInfo={companyInfo} />
     </main>
   )
 }

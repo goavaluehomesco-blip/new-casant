@@ -168,7 +168,7 @@ export default async function CareersPage() {
         </div>
       </section>
 
-      <Footer />
+      <Footer companyInfo={companyInfo} />
     </div>
   )
 }

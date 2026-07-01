@@ -30,7 +30,7 @@ export default async function ContactPage() {
         </div>
       </div>
       <Contact companyInfo={companyInfo} />
-      <Footer />
+      <Footer companyInfo={companyInfo} />
     </main>
   )
 }
