@@ -4,6 +4,7 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { createClient } from "@/lib/supabase/client"
 import { Plus, Edit, Trash2, Save, X, ImageIcon, Calendar, MapPin, Star, Settings2 } from "lucide-react"
+import { revalidateGallery } from "@/lib/actions/revalidate"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -182,6 +183,7 @@ export default function GalleryManager({
 
       setIsDialogOpen(false)
       resetForm()
+      await revalidateGallery()
       router.refresh()
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Failed to save project"
@@ -189,6 +191,22 @@ export default function GalleryManager({
       console.error("Error saving project:", err)
     } finally {
       setIsLoading(false)
+    }
+  }
+
+  const handleToggleFeatured = async (project: Project) => {
+    const supabase = createClient()
+    try {
+      const { error } = await supabase
+        .from("gallery_projects")
+        .update({ is_featured: !project.is_featured })
+        .eq("id", project.id)
+      if (error) throw error
+      await revalidateGallery()
+      router.refresh()
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Failed to update"
+      setError(msg)
     }
   }
 
@@ -371,13 +389,19 @@ export default function GalleryManager({
                     {project.is_active ? "Published" : "Draft"}
                   </span>
 
-                  {/* Featured badge */}
-                  {project.is_featured && (
-                    <span className="absolute top-2.5 left-2.5 text-[10px] font-medium px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/30 flex items-center gap-1">
-                      <Star className="w-2.5 h-2.5" />
-                      Featured
-                    </span>
-                  )}
+                  {/* Featured toggle */}
+                  <button
+                    onClick={() => handleToggleFeatured(project)}
+                    title={project.is_featured ? "Remove from featured" : "Mark as featured"}
+                    className={`absolute top-2.5 left-2.5 text-[10px] font-medium px-2 py-0.5 rounded-full border flex items-center gap-1 transition-colors ${
+                      project.is_featured
+                        ? "bg-amber-500/20 text-amber-400 border-amber-500/30 hover:bg-amber-500/30"
+                        : "bg-black/40 text-white/30 border-white/10 hover:text-amber-400 hover:border-amber-500/30 hover:bg-amber-500/10"
+                    }`}
+                  >
+                    <Star className={`w-2.5 h-2.5 ${project.is_featured ? "fill-amber-400" : ""}`} />
+                    {project.is_featured ? "Featured" : "Feature"}
+                  </button>
 
                   {/* Photo count pill */}
                   <button

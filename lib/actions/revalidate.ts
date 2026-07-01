@@ -15,6 +15,11 @@ export async function revalidateCompanyInfo() {
   revalidatePath("/", "layout")
 }
 
+export async function revalidateGallery() {
+  revalidatePath("/", "page")
+  revalidatePath("/admin/gallery", "page")
+}
+
 export async function revalidateAll() {
   revalidatePath("/", "layout")
 }

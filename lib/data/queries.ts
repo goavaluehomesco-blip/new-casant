@@ -95,7 +95,7 @@ async function _getFeaturedProjects(): Promise<GalleryProject[]> {
   const supabase = createUnauthenticatedClient()
   const { data, error } = await supabase
     .from("gallery_projects")
-    .select("id, title, slug, description, cover_image, location, event_date, category_id, is_featured, is_active, display_order, created_at, updated_at")
+    .select("id, title, slug, description, cover_image, location, event_date, category_id, is_featured, is_active, display_order, created_at, updated_at, images:gallery_images(id, project_id, image_url, caption, display_order, created_at)")
     .eq("is_featured", true)
     .eq("is_active", true)
     .order("created_at", { ascending: false })
