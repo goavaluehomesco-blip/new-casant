@@ -4,6 +4,7 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { createClient } from "@/lib/supabase/client"
 import { Plus, Edit, Trash2, Save, X, ImageIcon, Calendar, MapPin, Star, Settings2 } from "lucide-react"
+import { revalidateGallery } from "@/lib/actions/revalidate"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -182,6 +183,7 @@ export default function GalleryManager({
 
       setIsDialogOpen(false)
       resetForm()
+      await revalidateGallery()
       router.refresh()
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Failed to save project"
@@ -192,7 +194,7 @@ export default function GalleryManager({
     }
   }
 
-  const handleToggleFeatured = async (project: GalleryProjectWithImages) => {
+  const handleToggleFeatured = async (project: Project) => {
     const supabase = createClient()
     try {
       const { error } = await supabase
@@ -200,6 +202,7 @@ export default function GalleryManager({
         .update({ is_featured: !project.is_featured })
         .eq("id", project.id)
       if (error) throw error
+      await revalidateGallery()
       router.refresh()
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Failed to update"
