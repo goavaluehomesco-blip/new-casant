@@ -7,6 +7,7 @@ ALTER TABLE public.company_info
   ADD COLUMN IF NOT EXISTS inventory_hero_image_url  TEXT,
   ADD COLUMN IF NOT EXISTS about_hero_image_url      TEXT,
   ADD COLUMN IF NOT EXISTS about_story_image_url     TEXT,
+  ADD COLUMN IF NOT EXISTS careers_hero_image_url    TEXT,
   ADD COLUMN IF NOT EXISTS maintenance_mode          BOOLEAN  NOT NULL DEFAULT false,
   ADD COLUMN IF NOT EXISTS social_facebook           TEXT,
   ADD COLUMN IF NOT EXISTS social_instagram          TEXT,

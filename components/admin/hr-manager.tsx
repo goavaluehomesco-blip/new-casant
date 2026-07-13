@@ -8,20 +8,28 @@ import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Plus, Pencil, Trash2, Briefcase, MapPin, Clock, ToggleLeft, ToggleRight } from "lucide-react"
-import type { JobPosting, HrInfo } from "@/lib/data/types"
+import type { JobPosting, HrInfo, CompanyInfo } from "@/lib/data/types"
+import ImageUpload from "@/components/admin/image-upload"
+import { revalidateCompanyInfo } from "@/lib/actions/revalidate"
+import { useRouter } from "next/navigation"
 
 interface HrManagerProps {
   jobPostings: JobPosting[]
   hrInfo: HrInfo | null
+  companyInfo: CompanyInfo | null
 }
 
-export default function HrManager({ jobPostings: initialJobs, hrInfo: initialHr }: HrManagerProps) {
+export default function HrManager({ jobPostings: initialJobs, hrInfo: initialHr, companyInfo }: HrManagerProps) {
   const [jobs, setJobs] = useState<JobPosting[]>(initialJobs)
   const [hr, setHr] = useState<HrInfo | null>(initialHr)
   const [isJobDialogOpen, setIsJobDialogOpen] = useState(false)
   const [editingJob, setEditingJob] = useState<JobPosting | null>(null)
   const [saving, setSaving] = useState(false)
   const [savingHr, setSavingHr] = useState(false)
+  const [savingHero, setSavingHero] = useState(false)
+  const [heroSaved, setHeroSaved] = useState(false)
+  const [careersHeroImage, setCareersHeroImage] = useState(companyInfo?.careers_hero_image_url || "")
+  const router = useRouter()
   const [jobForm, setJobForm] = useState({ title: "", department: "", location: "", job_type: "Full-time", description: "", requirements: "" })
   const [hrForm, setHrForm] = useState({
     heading: hr?.heading || "Join Our Team",
@@ -85,6 +93,22 @@ export default function HrManager({ jobPostings: initialJobs, hrInfo: initialHr 
     if (data) setJobs(jobs.map(j => j.id === job.id ? data : j))
   }
 
+  const handleSaveHeroImage = async () => {
+    if (!companyInfo?.id) return
+    setSavingHero(true)
+    const { error } = await supabase
+      .from("company_info")
+      .update({ careers_hero_image_url: careersHeroImage || null })
+      .eq("id", companyInfo.id)
+    if (!error) {
+      await revalidateCompanyInfo()
+      router.refresh()
+      setHeroSaved(true)
+      setTimeout(() => setHeroSaved(false), 3000)
+    }
+    setSavingHero(false)
+  }
+
   const handleSaveHr = async () => {
     setSavingHr(true)
     const payload = {
@@ -108,6 +132,25 @@ export default function HrManager({ jobPostings: initialJobs, hrInfo: initialHr 
 
   return (
     <div className="p-8 space-y-10">
+      {/* Careers Hero Background Image */}
+      <div className="bg-[#161616] border border-white/10 rounded-xl p-6">
+        <h2 className="text-xl font-bold text-white mb-1">Hero Background Image</h2>
+        <p className="text-white/40 text-sm mb-5">Full-width photo shown behind the "Join Our Team" heading on the Careers page</p>
+        <ImageUpload
+          value={careersHeroImage}
+          onChange={setCareersHeroImage}
+          folder="careers"
+          aspectRatio="video"
+          label="Careers hero background"
+        />
+        <div className="flex items-center gap-3 mt-4">
+          <Button onClick={handleSaveHeroImage} disabled={savingHero}>
+            {savingHero ? "Saving..." : "Save Hero Image"}
+          </Button>
+          {heroSaved && <span className="text-green-400 text-sm">Saved!</span>}
+        </div>
+      </div>
+
       {/* HR Info Settings */}
       <div className="bg-white rounded-xl border border-slate-200 p-6">
         <h2 className="text-lg font-bold text-white mb-5">Careers Page Settings</h2>

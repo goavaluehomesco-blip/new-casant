@@ -26,6 +26,15 @@ export default async function CareersPage() {
 
       {/* Hero */}
       <section className="relative pt-36 pb-24 overflow-hidden bg-foreground">
+        {companyInfo?.careers_hero_image_url && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={companyInfo.careers_hero_image_url}
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+        )}
+        <div className="absolute inset-0 bg-foreground/80" />
         <div className="absolute inset-0 opacity-20 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary via-transparent to-transparent" />
         <div className="container mx-auto px-6 relative z-10 text-center max-w-3xl mx-auto">
           <p className="text-primary text-sm font-medium tracking-widest uppercase mb-4">We're Hiring</p>
