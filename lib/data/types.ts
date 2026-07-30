@@ -131,6 +131,7 @@ export interface CompanyInfo {
   inventory_hero_image_url: string | null
   about_hero_image_url: string | null
   about_story_image_url: string | null
+  careers_hero_image_url: string | null
   maintenance_mode: boolean
   created_at: string
   updated_at: string
