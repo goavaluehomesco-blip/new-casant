@@ -121,13 +121,17 @@ export default function ImageUpload({
   const aspectClass =
     aspectRatio === "square" ? "aspect-square" : aspectRatio === "video" ? "aspect-video" : "min-h-[120px]"
 
+  const bgClass = aspectRatio === "auto" 
+    ? (isDragging ? "border-blue-400 bg-transparent" : "border-slate-200 bg-transparent")
+    : (isDragging ? "border-blue-400 bg-blue-50" : "border-slate-200 bg-slate-50")
+
   return (
     <div className={cn("space-y-2", className)}>
       <div
         className={cn(
           "relative rounded-lg border-2 border-dashed transition-colors overflow-hidden",
           aspectClass,
-          isDragging ? "border-blue-400 bg-blue-50" : "border-slate-200 bg-slate-50",
+          bgClass,
           !value && "cursor-pointer hover:border-blue-300 hover:bg-blue-50/50",
         )}
         onClick={() => !value && !isUploading && inputRef.current?.click()}
@@ -140,7 +144,7 @@ export default function ImageUpload({
             <img
               src={value}
               alt={label}
-              className="w-full h-full object-cover"
+              className={cn("w-full h-full", aspectRatio === "auto" ? "object-contain" : "object-cover")}
             />
             <div className="absolute inset-0 bg-black/40 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
               <Button
