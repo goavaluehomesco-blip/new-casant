@@ -132,6 +132,7 @@ export default function HrManager({ jobPostings: initialJobs, hrInfo: initialHr,
 
   return (
     <div className="p-8 space-y-10">
+      {console.log("[v0] HrManager rendered - companyInfo:", companyInfo?.id, "careersHeroImage:", careersHeroImage)}
       {/* Careers Hero Background Image */}
       <div className="bg-[#161616] border border-white/10 rounded-xl p-6">
         <h2 className="text-xl font-bold text-white mb-1">Hero Background Image</h2>
