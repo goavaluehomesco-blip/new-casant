@@ -66,14 +66,24 @@ export default function HrManager({ jobPostings: initialJobs, hrInfo: initialHr,
   const handleSaveJob = async () => {
     setSaving(true)
     setError(null)
+    if (!jobForm.title?.trim()) {
+      setError("Job title is required")
+      setSaving(false)
+      return
+    }
+    if (!jobForm.job_type?.trim()) {
+      setError("Job type is required")
+      setSaving(false)
+      return
+    }
     try {
       const payload = {
-        title: jobForm.title,
-        department: jobForm.department || null,
-        location: jobForm.location || null,
-        job_type: jobForm.job_type,
-        description: jobForm.description,
-        requirements: jobForm.requirements || null,
+        title: jobForm.title.trim(),
+        department: jobForm.department?.trim() || null,
+        location: jobForm.location?.trim() || null,
+        job_type: jobForm.job_type.trim(),
+        description: jobForm.description?.trim() || "",
+        requirements: jobForm.requirements?.trim() || null,
       }
       if (editingJob) {
         const { data, error: err } = await supabase.from("job_postings").update(payload).eq("id", editingJob.id).select().single()
