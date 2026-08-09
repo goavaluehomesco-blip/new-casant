@@ -2,7 +2,15 @@
 
 import { useEffect, useState, useRef } from "react"
 import Image from "next/image"
+import Link from "next/link"
 import type { TeamMember } from "@/lib/data/types"
+
+const BIO_PREVIEW_LENGTH = 100
+
+function truncateBio(bio: string) {
+  if (bio.length <= BIO_PREVIEW_LENGTH) return bio
+  return `${bio.slice(0, BIO_PREVIEW_LENGTH).trimEnd()}...`
+}
 
 const defaultDirectors = [
   {
@@ -99,7 +107,17 @@ export function About({ teamMembers }: AboutProps) {
               <div className="p-6 text-center">
                 <h4 className="text-xl font-bold text-foreground mb-1">{director.name}</h4>
                 <div className="text-primary font-medium mb-4">{director.role}</div>
-                <p className="text-muted-foreground text-sm leading-relaxed">{director.bio}</p>
+                <p className="text-muted-foreground text-sm leading-relaxed">
+                  {truncateBio(director.bio || "")}
+                  {(director.bio || "").length > BIO_PREVIEW_LENGTH && (
+                    <>
+                      {" "}
+                      <Link href="/about" className="text-primary font-medium hover:underline whitespace-nowrap">
+                        Read more
+                      </Link>
+                    </>
+                  )}
+                </p>
               </div>
             </div>
           ))}

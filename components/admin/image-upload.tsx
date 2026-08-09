@@ -14,6 +14,17 @@ interface ImageUploadProps {
   className?: string
   aspectRatio?: "square" | "video" | "auto"
   label?: string
+  /** Restrict accepted image MIME types, e.g. ["image/png"]. Defaults to all common image types. */
+  acceptTypes?: string[]
+}
+
+const DEFAULT_ACCEPT_TYPES = ["image/jpeg", "image/png", "image/gif", "image/webp"]
+
+const MIME_LABELS: Record<string, string> = {
+  "image/jpeg": "JPEG",
+  "image/png": "PNG",
+  "image/gif": "GIF",
+  "image/webp": "WebP",
 }
 
 export default function ImageUpload({
@@ -23,14 +34,23 @@ export default function ImageUpload({
   className,
   aspectRatio = "video",
   label = "Image",
+  acceptTypes = DEFAULT_ACCEPT_TYPES,
 }: ImageUploadProps) {
   const [isUploading, setIsUploading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [isDragging, setIsDragging] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
-  // Compress image client-side before uploading to reduce Supabase storage egress
+  // Compress image client-side before uploading to reduce Supabase storage egress.
+  // Sources that can have transparency (PNG/WebP/GIF) are re-encoded as WebP to
+  // preserve the alpha channel — encoding everything as JPEG would flatten
+  // transparent pixels to black, which is why logos used to get a black background.
   const compressImage = (file: File): Promise<File> => {
+    const canHaveAlpha = ["image/png", "image/webp", "image/gif"].includes(file.type)
+    const outputType = canHaveAlpha ? "image/webp" : "image/jpeg"
+    const outputExt = canHaveAlpha ? ".webp" : ".jpg"
+    const quality = canHaveAlpha ? 0.9 : 0.82
+
     return new Promise((resolve) => {
       const img = new window.Image()
       const url = URL.createObjectURL(file)
@@ -51,10 +71,10 @@ export default function ImageUpload({
         canvas.toBlob(
           (blob) => {
             if (!blob) { resolve(file); return }
-            resolve(new File([blob], file.name.replace(/\.[^.]+$/, ".jpg"), { type: "image/jpeg" }))
+            resolve(new File([blob], file.name.replace(/\.[^.]+$/, outputExt), { type: outputType }))
           },
-          "image/jpeg",
-          0.82, // 82% quality — good balance of size vs. quality
+          outputType,
+          quality,
         )
       }
       img.onerror = () => { URL.revokeObjectURL(url); resolve(file) }
@@ -62,9 +82,11 @@ export default function ImageUpload({
     })
   }
 
+  const acceptedLabel = acceptTypes.map((t) => MIME_LABELS[t] || t).join(", ")
+
   const uploadFile = async (file: File) => {
-    if (!file.type.startsWith("image/")) {
-      setError("Please select an image file (JPEG, PNG, GIF, WebP)")
+    if (!acceptTypes.includes(file.type)) {
+      setError(`Please select a ${acceptedLabel} file`)
       return
     }
 
@@ -77,15 +99,17 @@ export default function ImageUpload({
     setError(null)
 
     try {
-      // Compress before uploading — reduces storage use and future egress
+      // Compress before uploading — reduces storage use and future egress.
+      // Transparent sources (PNG/WebP/GIF) stay as WebP to keep their alpha channel.
       const compressed = await compressImage(file)
+      const ext = compressed.type === "image/webp" ? "webp" : compressed.type === "image/png" ? "png" : "jpg"
 
       const supabase = createClient()
-      const fileName = `${folder}/${Date.now()}-${Math.random().toString(36).slice(2)}.jpg`
+      const fileName = `${folder}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
 
       const { error: uploadError } = await supabase.storage
         .from("casant-media")
-        .upload(fileName, compressed, { upsert: false, contentType: "image/jpeg" })
+        .upload(fileName, compressed, { upsert: false, contentType: compressed.type })
 
       if (uploadError) throw uploadError
 
@@ -183,7 +207,7 @@ export default function ImageUpload({
                     Click or drag to upload
                   </p>
                   <p className="text-xs text-slate-400 mt-1">
-                    JPEG, PNG, GIF, WebP up to 500KB
+                    {acceptedLabel} up to 500KB
                   </p>
                 </div>
               </>
@@ -201,7 +225,7 @@ export default function ImageUpload({
       <input
         ref={inputRef}
         type="file"
-        accept="image/jpeg,image/jpg,image/png,image/gif,image/webp"
+        accept={acceptTypes.join(",")}
         onChange={handleFileChange}
         className="hidden"
       />
