@@ -20,6 +20,11 @@ export async function revalidateGallery() {
   revalidatePath("/admin/gallery", "page")
 }
 
+export async function revalidateBlog() {
+  revalidatePath("/", "page")
+  revalidatePath("/blog", "layout")
+}
+
 export async function revalidateAll() {
   revalidatePath("/", "layout")
 }

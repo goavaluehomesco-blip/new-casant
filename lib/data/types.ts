@@ -221,3 +221,21 @@ export interface Clientele {
   created_at: string
   updated_at: string
 }
+
+export type BlogContentBlock =
+  | { type: "text"; value: string }
+  | { type: "image"; url: string; caption?: string }
+
+export interface BlogPost {
+  id: string
+  title: string
+  slug: string
+  description: string | null
+  cover_image: string | null
+  images: string[]
+  content_blocks: BlogContentBlock[]
+  is_active: boolean
+  display_order: number
+  created_at: string
+  updated_at: string
+}

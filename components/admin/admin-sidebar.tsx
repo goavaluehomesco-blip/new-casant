@@ -24,6 +24,7 @@ import {
   ExternalLink,
   Star,
   BookOpen,
+  Newspaper,
 } from "lucide-react"
 
 interface AdminSidebarProps {
@@ -53,6 +54,7 @@ const navSections = [
       { icon: Quote, label: "Testimonials", href: "/admin/testimonials" },
       { icon: Star, label: "Clientele", href: "/admin/clientele" },
       { icon: Instagram, label: "Instagram", href: "/admin/instagram" },
+      { icon: Newspaper, label: "Blog", href: "/admin/blog" },
     ],
   },
   {
