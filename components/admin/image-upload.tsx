@@ -29,8 +29,16 @@ export default function ImageUpload({
   const [isDragging, setIsDragging] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
-  // Compress image client-side before uploading to reduce Supabase storage egress
+  // Compress image client-side before uploading to reduce Supabase storage egress.
+  // Sources that can have transparency (PNG/WebP/GIF) are re-encoded as WebP to
+  // preserve the alpha channel — encoding everything as JPEG would flatten
+  // transparent pixels to black, which is why logos used to get a black background.
   const compressImage = (file: File): Promise<File> => {
+    const canHaveAlpha = ["image/png", "image/webp", "image/gif"].includes(file.type)
+    const outputType = canHaveAlpha ? "image/webp" : "image/jpeg"
+    const outputExt = canHaveAlpha ? ".webp" : ".jpg"
+    const quality = canHaveAlpha ? 0.9 : 0.82
+
     return new Promise((resolve) => {
       const img = new window.Image()
       const url = URL.createObjectURL(file)
@@ -51,10 +59,10 @@ export default function ImageUpload({
         canvas.toBlob(
           (blob) => {
             if (!blob) { resolve(file); return }
-            resolve(new File([blob], file.name.replace(/\.[^.]+$/, ".jpg"), { type: "image/jpeg" }))
+            resolve(new File([blob], file.name.replace(/\.[^.]+$/, outputExt), { type: outputType }))
           },
-          "image/jpeg",
-          0.82, // 82% quality — good balance of size vs. quality
+          outputType,
+          quality,
         )
       }
       img.onerror = () => { URL.revokeObjectURL(url); resolve(file) }
@@ -77,15 +85,17 @@ export default function ImageUpload({
     setError(null)
 
     try {
-      // Compress before uploading — reduces storage use and future egress
+      // Compress before uploading — reduces storage use and future egress.
+      // Transparent sources (PNG/WebP/GIF) stay as WebP to keep their alpha channel.
       const compressed = await compressImage(file)
+      const ext = compressed.type === "image/webp" ? "webp" : compressed.type === "image/png" ? "png" : "jpg"
 
       const supabase = createClient()
-      const fileName = `${folder}/${Date.now()}-${Math.random().toString(36).slice(2)}.jpg`
+      const fileName = `${folder}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
 
       const { error: uploadError } = await supabase.storage
         .from("casant-media")
-        .upload(fileName, compressed, { upsert: false, contentType: "image/jpeg" })
+        .upload(fileName, compressed, { upsert: false, contentType: compressed.type })
 
       if (uploadError) throw uploadError
 
