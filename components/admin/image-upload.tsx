@@ -14,6 +14,17 @@ interface ImageUploadProps {
   className?: string
   aspectRatio?: "square" | "video" | "auto"
   label?: string
+  /** Restrict accepted image MIME types, e.g. ["image/png"]. Defaults to all common image types. */
+  acceptTypes?: string[]
+}
+
+const DEFAULT_ACCEPT_TYPES = ["image/jpeg", "image/png", "image/gif", "image/webp"]
+
+const MIME_LABELS: Record<string, string> = {
+  "image/jpeg": "JPEG",
+  "image/png": "PNG",
+  "image/gif": "GIF",
+  "image/webp": "WebP",
 }
 
 export default function ImageUpload({
@@ -23,6 +34,7 @@ export default function ImageUpload({
   className,
   aspectRatio = "video",
   label = "Image",
+  acceptTypes = DEFAULT_ACCEPT_TYPES,
 }: ImageUploadProps) {
   const [isUploading, setIsUploading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -70,9 +82,11 @@ export default function ImageUpload({
     })
   }
 
+  const acceptedLabel = acceptTypes.map((t) => MIME_LABELS[t] || t).join(", ")
+
   const uploadFile = async (file: File) => {
-    if (!file.type.startsWith("image/")) {
-      setError("Please select an image file (JPEG, PNG, GIF, WebP)")
+    if (!acceptTypes.includes(file.type)) {
+      setError(`Please select a ${acceptedLabel} file`)
       return
     }
 
@@ -193,7 +207,7 @@ export default function ImageUpload({
                     Click or drag to upload
                   </p>
                   <p className="text-xs text-slate-400 mt-1">
-                    JPEG, PNG, GIF, WebP up to 500KB
+                    {acceptedLabel} up to 500KB
                   </p>
                 </div>
               </>
@@ -211,7 +225,7 @@ export default function ImageUpload({
       <input
         ref={inputRef}
         type="file"
-        accept="image/jpeg,image/jpg,image/png,image/gif,image/webp"
+        accept={acceptTypes.join(",")}
         onChange={handleFileChange}
         className="hidden"
       />

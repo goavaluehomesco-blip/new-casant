@@ -251,6 +251,7 @@ export default function SettingsManager({ companyInfo }: SettingsManagerProps) {
                     folder="branding"
                     aspectRatio="auto"
                     label="Company Logo"
+                    acceptTypes={["image/png"]}
                   />
                 </div>
               </CardContent>
