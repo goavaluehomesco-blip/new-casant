@@ -37,10 +37,10 @@ export function JobOpenings({ jobs }: JobOpeningsProps) {
                       {job.location}
                     </span>
                   )}
-                  {job.job_type && (
+                  {(job.job_type?.trim() || "Full-time") && (
                     <span className="flex items-center gap-1">
                       <Clock className="w-3.5 h-3.5" />
-                      {job.job_type}
+                      {job.job_type?.trim() || "Full-time"}
                     </span>
                   )}
                 </div>

@@ -16,6 +16,7 @@ import type {
   HrInfo,
   ServiceImage,
   Clientele,
+  BlogPost,
 } from "./types"
 
 // Hero Slides
@@ -359,6 +360,87 @@ export const getActiveClientele = unstable_cache(
   ["clientele"],
   { revalidate: 3600, tags: ["clientele"] }
 )
+
+// Blog Posts — table may not exist until SQL is run; returns [] / null safely
+function normalizeBlogPost(post: any): BlogPost {
+  let images = post.images
+  if (typeof images === "string") {
+    try { images = JSON.parse(images) } catch { images = [] }
+  }
+  let content_blocks = post.content_blocks
+  if (typeof content_blocks === "string") {
+    try { content_blocks = JSON.parse(content_blocks) } catch { content_blocks = [] }
+  }
+  return {
+    ...post,
+    images: Array.isArray(images) ? images : [],
+    content_blocks: Array.isArray(content_blocks) ? content_blocks : [],
+  }
+}
+
+const BLOG_COLUMNS =
+  "id, title, slug, description, cover_image, hero_image, images, content_blocks, is_active, display_order, created_at, updated_at"
+
+async function _getFeaturedBlogPosts(): Promise<BlogPost[]> {
+  const supabase = createUnauthenticatedClient()
+  const { data, error } = await supabase
+    .from("blog_posts")
+    .select(BLOG_COLUMNS)
+    .eq("is_active", true)
+    .order("display_order", { ascending: true })
+    .order("created_at", { ascending: false })
+    .limit(3)
+  if (error) {
+    if (error.code === "PGRST205" || error.message?.includes("schema cache")) return []
+    console.error("Error fetching featured blog posts:", error)
+    return []
+  }
+  return (data || []).map(normalizeBlogPost)
+}
+export const getFeaturedBlogPosts = unstable_cache(
+  _getFeaturedBlogPosts,
+  ["featured-blog-posts"],
+  { revalidate: 1800, tags: ["blog-posts"] }
+)
+
+async function _getAllBlogPosts(): Promise<BlogPost[]> {
+  const supabase = createUnauthenticatedClient()
+  const { data, error } = await supabase
+    .from("blog_posts")
+    .select(BLOG_COLUMNS)
+    .eq("is_active", true)
+    .order("display_order", { ascending: true })
+    .order("created_at", { ascending: false })
+    .limit(100)
+  if (error) {
+    if (error.code === "PGRST205" || error.message?.includes("schema cache")) return []
+    console.error("Error fetching blog posts:", error)
+    return []
+  }
+  return (data || []).map(normalizeBlogPost)
+}
+export const getAllBlogPosts = unstable_cache(
+  _getAllBlogPosts,
+  ["all-blog-posts"],
+  { revalidate: 1800, tags: ["blog-posts"] }
+)
+
+export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> {
+  const supabase = createUnauthenticatedClient()
+  const { data, error } = await supabase
+    .from("blog_posts")
+    .select(BLOG_COLUMNS)
+    .eq("slug", slug)
+    .eq("is_active", true)
+    .single()
+  if (error) {
+    if (error.code !== "PGRST205" && !error.message?.includes("schema cache")) {
+      console.error("Error fetching blog post by slug:", error)
+    }
+    return null
+  }
+  return normalizeBlogPost(data)
+}
 
 // Service Images
 export async function getServiceImages(serviceId: string): Promise<ServiceImage[]> {
