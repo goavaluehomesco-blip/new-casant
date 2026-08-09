@@ -232,6 +232,7 @@ export interface BlogPost {
   slug: string
   description: string | null
   cover_image: string | null
+  hero_image: string | null
   images: string[]
   content_blocks: BlogContentBlock[]
   is_active: boolean

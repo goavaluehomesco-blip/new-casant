@@ -45,6 +45,7 @@ const emptyForm = {
   title: "",
   description: "",
   cover_image: "",
+  hero_image: "",
   images: [] as string[],
   content_blocks: [] as BlogContentBlock[],
   is_active: true,
@@ -85,6 +86,7 @@ export default function BlogManager({ posts }: BlogManagerProps) {
       title: post.title,
       description: post.description || "",
       cover_image: post.cover_image || "",
+      hero_image: post.hero_image || "",
       images: post.images || [],
       content_blocks: post.content_blocks || [],
       is_active: post.is_active,
@@ -154,6 +156,7 @@ export default function BlogManager({ posts }: BlogManagerProps) {
         slug,
         description: formData.description.trim() || null,
         cover_image: formData.cover_image || cleanImages[0] || null,
+        hero_image: formData.hero_image || null,
         images: cleanImages,
         content_blocks: cleanBlocks,
         is_active: formData.is_active,
@@ -338,6 +341,20 @@ export default function BlogManager({ posts }: BlogManagerProps) {
                 {error}
               </div>
             )}
+
+            <div className="space-y-2">
+              <Label>Hero Image (optional)</Label>
+              <p className="text-xs text-muted-foreground">
+                A full-width banner shown at the very top of the post, above the title. Leave empty to skip it.
+              </p>
+              <ImageUpload
+                value={formData.hero_image}
+                onChange={(url) => setFormData({ ...formData, hero_image: url })}
+                folder="blog"
+                aspectRatio="video"
+                label="Hero banner"
+              />
+            </div>
 
             <div className="space-y-2">
               <Label htmlFor="title">Title</Label>

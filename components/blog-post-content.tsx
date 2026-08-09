@@ -15,7 +15,22 @@ export function BlogPostContent({ post }: BlogPostContentProps) {
   const collage = post.images?.length ? post.images : post.cover_image ? [post.cover_image] : []
 
   return (
-    <article className="pt-20">
+    <article className={post.hero_image ? "" : "pt-20"}>
+      {/* Hero image */}
+      {post.hero_image && (
+        <section className="relative w-full h-[52vh] md:h-[70vh] min-h-[320px] max-h-[720px] overflow-hidden">
+          <Image
+            src={post.hero_image}
+            alt={post.title}
+            fill
+            priority
+            className="object-cover"
+            sizes="100vw"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/10 to-black/25" />
+        </section>
+      )}
+
       {/* Header */}
       <section className="py-16 md:py-20 bg-secondary/30">
         <div className="container mx-auto px-6 max-w-3xl">

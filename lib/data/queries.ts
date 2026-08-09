@@ -379,7 +379,7 @@ function normalizeBlogPost(post: any): BlogPost {
 }
 
 const BLOG_COLUMNS =
-  "id, title, slug, description, cover_image, images, content_blocks, is_active, display_order, created_at, updated_at"
+  "id, title, slug, description, cover_image, hero_image, images, content_blocks, is_active, display_order, created_at, updated_at"
 
 async function _getFeaturedBlogPosts(): Promise<BlogPost[]> {
   const supabase = createUnauthenticatedClient()
