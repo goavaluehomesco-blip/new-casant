@@ -1,7 +1,8 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
-import { MessageCircle, X, Send, Bot, Loader2, ChevronDown } from "lucide-react"
+import Link from "next/link"
+import { MessageCircle, X, Send, Bot, Loader2, ChevronDown, BookOpen } from "lucide-react"
 
 interface Message {
   id: string
@@ -200,6 +201,21 @@ export function Chatbot() {
           </div>
         </div>
       </div>
+
+      {/* Blog Posts Link */}
+      <Link
+        href="/blog"
+        className={`fixed right-6 z-50 flex items-center gap-2 pl-3.5 pr-4 py-2.5 rounded-full bg-background text-foreground border border-border shadow-lg hover:shadow-xl hover:border-primary/40 hover:-translate-y-0.5 transition-all duration-200 ${
+          isOpen ? "opacity-0 pointer-events-none" : "opacity-100"
+        }`}
+        style={{ bottom: "calc(1.5rem + 3.5rem + 12px)" }}
+        aria-label="View blog posts"
+      >
+        <span className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+          <BookOpen className="w-3.5 h-3.5 text-primary" />
+        </span>
+        <span className="text-sm font-medium whitespace-nowrap">Blog Posts</span>
+      </Link>
 
       {/* Floating Toggle Button */}
       <button
