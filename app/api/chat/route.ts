@@ -1,5 +1,6 @@
-const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions"
-const MODEL = "llama-3.3-70b-versatile"
+import { streamText } from "ai"
+
+const MODEL = "meta/llama-3.3-70b"
 
 const SYSTEM_PROMPT = `You are the friendly virtual assistant for Casant Events, a premier event management company based in Goa, India. You have been operating since 1998 — over 28 years of experience creating world-class events.
 
@@ -47,80 +48,23 @@ Visitors can reach Casant Events via the contact form on the homepage (/#contact
 export async function POST(req: Request) {
   const { messages } = await req.json()
 
-  // Map UI messages to Groq-compatible format
-  const groqMessages = [
-    { role: "system", content: SYSTEM_PROMPT },
-    ...messages.map((m: { role: string; content: string | { type: string; text: string }[] }) => ({
-      role: m.role === "user" ? "user" : "assistant",
-      content: typeof m.content === "string"
-        ? m.content
-        : Array.isArray(m.content)
-          ? m.content.map((p) => (p.type === "text" ? p.text : "")).join("")
-          : "",
-    })),
-  ]
+  // Map incoming { role, content } messages to AI SDK ModelMessage format
+  const modelMessages = messages.map((m: { role: string; content: string | { type: string; text: string }[] }) => ({
+    role: m.role === "user" ? ("user" as const) : ("assistant" as const),
+    content: typeof m.content === "string"
+      ? m.content
+      : Array.isArray(m.content)
+        ? m.content.map((p) => (p.type === "text" ? p.text : "")).join("")
+        : "",
+  }))
 
-  const groqRes = await fetch(GROQ_API_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
-    },
-    body: JSON.stringify({
-      model: MODEL,
-      messages: groqMessages,
-      max_tokens: 512,
-      temperature: 0.7,
-      stream: true,
-    }),
+  const result = streamText({
+    model: MODEL,
+    system: SYSTEM_PROMPT,
+    messages: modelMessages,
+    maxOutputTokens: 512,
+    temperature: 0.7,
   })
 
-  if (!groqRes.ok) {
-    const err = await groqRes.text()
-    return new Response(JSON.stringify({ error: err }), { status: 500 })
-  }
-
-  // Stream SSE from Groq → transform to plain text stream for the client
-  const encoder = new TextEncoder()
-  const stream = new ReadableStream({
-    async start(controller) {
-      const reader = groqRes.body!.getReader()
-      const decoder = new TextDecoder()
-      let buffer = ""
-
-      while (true) {
-        const { done, value } = await reader.read()
-        if (done) break
-
-        buffer += decoder.decode(value, { stream: true })
-        const lines = buffer.split("\n")
-        buffer = lines.pop() ?? ""
-
-        for (const line of lines) {
-          const trimmed = line.trim()
-          if (!trimmed || trimmed === "data: [DONE]") continue
-          if (!trimmed.startsWith("data: ")) continue
-
-          try {
-            const json = JSON.parse(trimmed.slice(6))
-            const token = json.choices?.[0]?.delta?.content
-            if (token) {
-              controller.enqueue(encoder.encode(token))
-            }
-          } catch {
-            // ignore malformed chunks
-          }
-        }
-      }
-      controller.close()
-    },
-  })
-
-  return new Response(stream, {
-    headers: {
-      "Content-Type": "text/plain; charset=utf-8",
-      "Transfer-Encoding": "chunked",
-      "Cache-Control": "no-cache",
-    },
-  })
+  return result.toTextStreamResponse()
 }
