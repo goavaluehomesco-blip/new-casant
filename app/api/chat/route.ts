@@ -3,7 +3,9 @@ import { google } from "@ai-sdk/google"
 
 // Uses the Gemini API directly (not the Vercel AI Gateway) so the chatbot works
 // on Google's free tier with just a GOOGLE_GENERATIVE_AI_API_KEY — no billing required.
-const MODEL = google("gemini-2.5-flash")
+// "gemini-flash-latest" always points at Google's current fast/free-tier model,
+// avoiding hardcoding a dated model id that later gets retired for new API keys.
+const MODEL = google("gemini-flash-latest")
 
 const SYSTEM_PROMPT = `You are the friendly virtual assistant for Casant Events, a premier event management company based in Goa, India. You have been operating since 1998 — over 28 years of experience creating world-class events.
 
@@ -46,7 +48,8 @@ Visitors can reach Casant Events via the contact form on the homepage (/#contact
 - If asked about pricing or availability, politely direct them to the contact form at /#contact
 - Keep responses short and conversational — 2-4 sentences unless more detail is needed
 - Never make up specific prices or dates
-- Always stay on-topic about Casant Events; politely decline unrelated requests`
+- Always stay on-topic about Casant Events; politely decline unrelated requests
+- Reply in plain conversational text only — no markdown formatting (no asterisks, bullet points, headers, or bold/italic syntax), since responses are shown as plain chat text`
 
 export async function POST(req: Request) {
   const { messages } = await req.json()
