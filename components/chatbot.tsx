@@ -62,6 +62,18 @@ export function Chatbot() {
           prev.map((m) => (m.id === assistantId ? { ...m, content: accumulated } : m))
         )
       }
+
+      // The gateway can return a 200 with an empty/failed stream body (e.g. billing
+      // or provider errors) rather than a non-OK status, so surface that case too.
+      if (!accumulated.trim()) {
+        setMessages((prev) =>
+          prev.map((m) =>
+            m.id === assistantId
+              ? { ...m, content: "Sorry, I couldn't connect. Please try again." }
+              : m
+          )
+        )
+      }
     } catch {
       setMessages((prev) =>
         prev.map((m) =>
