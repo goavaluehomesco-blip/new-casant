@@ -19,6 +19,7 @@ const defaultDirectors: TeamMember[] = [
     email: null,
     phone: null,
     linkedin: null,
+    member_type: "director" as const,
     display_order: 1,
     is_active: true,
     created_at: "",
@@ -33,6 +34,7 @@ const defaultDirectors: TeamMember[] = [
     email: null,
     phone: null,
     linkedin: null,
+    member_type: "director" as const,
     display_order: 2,
     is_active: true,
     created_at: "",
@@ -47,6 +49,7 @@ const defaultDirectors: TeamMember[] = [
     email: null,
     phone: null,
     linkedin: null,
+    member_type: "director" as const,
     display_order: 3,
     is_active: true,
     created_at: "",
@@ -56,11 +59,12 @@ const defaultDirectors: TeamMember[] = [
 
 interface AboutContentProps {
   teamMembers?: TeamMember[]
+  employees?: TeamMember[]
   companyInfo?: CompanyInfo | null
   lifeAtCasantImages?: LifeAtCasantImage[]
 }
 
-export function AboutContent({ teamMembers, companyInfo, lifeAtCasantImages }: AboutContentProps) {
+export function AboutContent({ teamMembers, employees, companyInfo, lifeAtCasantImages }: AboutContentProps) {
   const [isVisible, setIsVisible] = useState(false)
   const sectionRef = useRef<HTMLDivElement>(null)
 
@@ -259,8 +263,15 @@ export function AboutContent({ teamMembers, companyInfo, lifeAtCasantImages }: A
         </div>
       </section>
 
-      {/* Casant Team Carousel */}
-      <TeamCarousel members={directors} />
+      {/* Employees Carousel */}
+      {employees && employees.length > 0 && (
+        <TeamCarousel
+          members={employees}
+          eyebrow="Our People"
+          title="The Casant Team"
+          description="Every celebration is built by hands you rarely see. Meet the people behind our productions."
+        />
+      )}
 
       {/* Life at Casant Teaser */}
       <LifeAtCasantTeaser images={lifeAtCasantImages || []} />

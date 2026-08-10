@@ -93,6 +93,8 @@ export interface InventoryItem {
   updated_at: string
 }
 
+export type TeamMemberType = "director" | "employee"
+
 export interface TeamMember {
   id: string
   name: string
@@ -102,6 +104,7 @@ export interface TeamMember {
   email: string | null
   phone: string | null
   linkedin: string | null
+  member_type: TeamMemberType
   display_order: number
   is_active: boolean
   created_at: string

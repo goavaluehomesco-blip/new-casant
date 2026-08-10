@@ -12,6 +12,7 @@ import ImageUpload from "@/components/admin/image-upload"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { Switch } from "@/components/ui/switch"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -23,6 +24,8 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 
+type TeamMemberType = "director" | "employee"
+
 interface TeamMember {
   id: string
   name: string
@@ -32,6 +35,7 @@ interface TeamMember {
   email: string | null
   phone: string | null
   linkedin: string | null
+  member_type?: TeamMemberType
   display_order: number
   is_active: boolean
 }
@@ -48,6 +52,7 @@ export default function TeamManager({ members }: TeamManagerProps) {
   const [deletingMember, setDeletingMember] = useState<TeamMember | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [activeTab, setActiveTab] = useState<TeamMemberType>("director")
 
   const [formData, setFormData] = useState({
     name: "",
@@ -57,6 +62,7 @@ export default function TeamManager({ members }: TeamManagerProps) {
     email: "",
     phone: "",
     linkedin: "",
+    member_type: "director" as TeamMemberType,
     is_active: true,
   })
 
@@ -69,6 +75,7 @@ export default function TeamManager({ members }: TeamManagerProps) {
       email: "",
       phone: "",
       linkedin: "",
+      member_type: activeTab,
       is_active: true,
     })
     setEditingMember(null)
@@ -89,10 +96,13 @@ export default function TeamManager({ members }: TeamManagerProps) {
       email: member.email || "",
       phone: member.phone || "",
       linkedin: member.linkedin || "",
+      member_type: member.member_type || "director",
       is_active: member.is_active,
     })
     setIsDialogOpen(true)
   }
+
+  const filteredMembers = members.filter((m) => (m.member_type || "director") === activeTab)
 
   const handleSubmit = async () => {
     const supabase = createClient()
@@ -108,6 +118,7 @@ export default function TeamManager({ members }: TeamManagerProps) {
         email: formData.email || null,
         phone: formData.phone || null,
         linkedin: formData.linkedin || null,
+        member_type: formData.member_type,
         is_active: formData.is_active,
       }
 
@@ -117,7 +128,7 @@ export default function TeamManager({ members }: TeamManagerProps) {
       } else {
         const { error } = await supabase.from("team_members").insert({
           ...data,
-          display_order: members.length,
+          display_order: filteredMembers.length,
         })
         if (error) throw error
       }
@@ -162,7 +173,7 @@ export default function TeamManager({ members }: TeamManagerProps) {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-white">Team Members</h1>
-          <p className="text-white/50">Manage your team and directors</p>
+          <p className="text-white/50">Manage your directors and employees</p>
         </div>
         <Button onClick={openCreateDialog} className="bg-blue-600 hover:bg-blue-700">
           <Plus className="w-4 h-4 mr-2" />
@@ -170,20 +181,45 @@ export default function TeamManager({ members }: TeamManagerProps) {
         </Button>
       </div>
 
+      <div className="flex items-center gap-2 mb-6 border-b border-white/10">
+        <button
+          onClick={() => setActiveTab("director")}
+          className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
+            activeTab === "director"
+              ? "border-blue-600 text-white"
+              : "border-transparent text-white/50 hover:text-white/80"
+          }`}
+        >
+          Directors ({members.filter((m) => (m.member_type || "director") === "director").length})
+        </button>
+        <button
+          onClick={() => setActiveTab("employee")}
+          className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
+            activeTab === "employee"
+              ? "border-blue-600 text-white"
+              : "border-transparent text-white/50 hover:text-white/80"
+          }`}
+        >
+          Employees ({members.filter((m) => m.member_type === "employee").length})
+        </button>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {members.length === 0 ? (
+        {filteredMembers.length === 0 ? (
           <Card className="col-span-full">
             <CardContent className="py-12 text-center">
               <User className="w-12 h-12 text-white/30 mx-auto mb-4" />
-              <p className="text-white/50">No team members yet.</p>
+              <p className="text-white/50">
+                No {activeTab === "director" ? "directors" : "employees"} yet.
+              </p>
               <Button variant="outline" className="mt-4 bg-transparent" onClick={openCreateDialog}>
                 <Plus className="w-4 h-4 mr-2" />
-                Add First Member
+                Add First {activeTab === "director" ? "Director" : "Employee"}
               </Button>
             </CardContent>
           </Card>
         ) : (
-          members.map((member) => (
+          filteredMembers.map((member) => (
             <Card key={member.id} className={`overflow-hidden ${!member.is_active ? "opacity-60" : ""}`}>
               <CardHeader className="pb-2">
                 <div className="flex items-start gap-4">
@@ -246,6 +282,22 @@ export default function TeamManager({ members }: TeamManagerProps) {
             <DialogTitle>{editingMember ? "Edit Team Member" : "Add Team Member"}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="member_type">Member Type</Label>
+              <Select
+                value={formData.member_type}
+                onValueChange={(value: TeamMemberType) => setFormData({ ...formData, member_type: value })}
+              >
+                <SelectTrigger id="member_type">
+                  <SelectValue placeholder="Select type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="director">Director (Leadership)</SelectItem>
+                  <SelectItem value="employee">Employee (Team)</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="name">Name</Label>

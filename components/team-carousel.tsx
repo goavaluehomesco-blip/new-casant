@@ -7,9 +7,17 @@ import type { TeamMember } from "@/lib/data/types"
 
 interface TeamCarouselProps {
   members: TeamMember[]
+  eyebrow?: string
+  title?: string
+  description?: string
 }
 
-export function TeamCarousel({ members }: TeamCarouselProps) {
+export function TeamCarousel({
+  members,
+  eyebrow = "Our People",
+  title = "The Casant Team",
+  description = "Every celebration is built by hands you rarely see. Meet the people behind our productions.",
+}: TeamCarouselProps) {
   const trackRef = useRef<HTMLDivElement>(null)
 
   if (!members || members.length === 0) return null
@@ -27,13 +35,9 @@ export function TeamCarousel({ members }: TeamCarouselProps) {
       <div className="container mx-auto px-6">
         <div className="flex items-end justify-between gap-6 mb-12 max-w-6xl mx-auto">
           <div className="max-w-2xl">
-            <span className="text-primary font-medium tracking-wide text-sm uppercase">Our People</span>
-            <h2 className="text-4xl md:text-5xl font-bold text-foreground mt-4 mb-4 text-balance">
-              The Casant Team
-            </h2>
-            <p className="text-lg text-muted-foreground leading-relaxed">
-              Every celebration is built by hands you rarely see. Meet the people behind our productions.
-            </p>
+            <span className="text-primary font-medium tracking-wide text-sm uppercase">{eyebrow}</span>
+            <h2 className="text-4xl md:text-5xl font-bold text-foreground mt-4 mb-4 text-balance">{title}</h2>
+            <p className="text-lg text-muted-foreground leading-relaxed">{description}</p>
           </div>
           <div className="hidden md:flex gap-2 shrink-0">
             <Button
