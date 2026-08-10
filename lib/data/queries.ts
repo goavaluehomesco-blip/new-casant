@@ -17,6 +17,7 @@ import type {
   ServiceImage,
   Clientele,
   BlogPost,
+  LifeAtCasantImage,
 } from "./types"
 
 // Hero Slides
@@ -441,6 +442,27 @@ export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> 
   }
   return normalizeBlogPost(data)
 }
+
+// Life at Casant Gallery — table may not exist until SQL is run; returns [] safely
+async function _getActiveLifeAtCasantImages(): Promise<LifeAtCasantImage[]> {
+  const supabase = createUnauthenticatedClient()
+  const { data, error } = await supabase
+    .from("life_at_casant_images")
+    .select("id, image_url, caption, display_order, is_active, created_at, updated_at")
+    .eq("is_active", true)
+    .order("display_order", { ascending: true })
+  if (error) {
+    if (error.code === "PGRST205" || error.message?.includes("schema cache") || error.message?.includes("does not exist")) return []
+    console.error("Error fetching Life at Casant images:", error)
+    return []
+  }
+  return (data || []) as LifeAtCasantImage[]
+}
+export const getActiveLifeAtCasantImages = unstable_cache(
+  _getActiveLifeAtCasantImages,
+  ["life-at-casant-images"],
+  { revalidate: 3600, tags: ["life-at-casant-images"] }
+)
 
 // Service Images
 export async function getServiceImages(serviceId: string): Promise<ServiceImage[]> {

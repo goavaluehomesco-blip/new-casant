@@ -25,6 +25,7 @@ import {
   Star,
   BookOpen,
   Newspaper,
+  Users2,
 } from "lucide-react"
 
 interface AdminSidebarProps {
@@ -55,6 +56,7 @@ const navSections = [
       { icon: Star, label: "Clientele", href: "/admin/clientele" },
       { icon: Instagram, label: "Instagram", href: "/admin/instagram" },
       { icon: Newspaper, label: "Blog", href: "/admin/blog" },
+      { icon: Users2, label: "Life at Casant", href: "/admin/life-at-casant" },
     ],
   },
   {

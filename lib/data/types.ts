@@ -226,6 +226,16 @@ export type BlogContentBlock =
   | { type: "text"; value: string }
   | { type: "image"; url: string; caption?: string }
 
+export interface LifeAtCasantImage {
+  id: string
+  image_url: string
+  caption: string | null
+  display_order: number
+  is_active: boolean
+  created_at: string
+  updated_at: string
+}
+
 export interface BlogPost {
   id: string
   title: string

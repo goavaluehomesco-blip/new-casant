@@ -5,7 +5,9 @@ import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { CheckCircle2 } from "lucide-react"
-import type { TeamMember, CompanyInfo } from "@/lib/data/types"
+import { TeamCarousel } from "@/components/team-carousel"
+import { LifeAtCasantTeaser } from "@/components/life-at-casant-teaser"
+import type { TeamMember, CompanyInfo, LifeAtCasantImage } from "@/lib/data/types"
 
 const defaultDirectors: TeamMember[] = [
   {
@@ -55,9 +57,10 @@ const defaultDirectors: TeamMember[] = [
 interface AboutContentProps {
   teamMembers?: TeamMember[]
   companyInfo?: CompanyInfo | null
+  lifeAtCasantImages?: LifeAtCasantImage[]
 }
 
-export function AboutContent({ teamMembers, companyInfo }: AboutContentProps) {
+export function AboutContent({ teamMembers, companyInfo, lifeAtCasantImages }: AboutContentProps) {
   const [isVisible, setIsVisible] = useState(false)
   const sectionRef = useRef<HTMLDivElement>(null)
 
@@ -255,6 +258,12 @@ export function AboutContent({ teamMembers, companyInfo }: AboutContentProps) {
           </div>
         </div>
       </section>
+
+      {/* Casant Team Carousel */}
+      <TeamCarousel members={directors} />
+
+      {/* Life at Casant Teaser */}
+      <LifeAtCasantTeaser images={lifeAtCasantImages || []} />
 
       {/* CTA */}
       <section className="py-24 bg-primary">
