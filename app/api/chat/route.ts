@@ -1,6 +1,9 @@
 import { streamText } from "ai"
+import { google } from "@ai-sdk/google"
 
-const MODEL = "meta/llama-3.3-70b"
+// Uses the Gemini API directly (not the Vercel AI Gateway) so the chatbot works
+// on Google's free tier with just a GOOGLE_GENERATIVE_AI_API_KEY — no billing required.
+const MODEL = google("gemini-2.5-flash")
 
 const SYSTEM_PROMPT = `You are the friendly virtual assistant for Casant Events, a premier event management company based in Goa, India. You have been operating since 1998 — over 28 years of experience creating world-class events.
 
