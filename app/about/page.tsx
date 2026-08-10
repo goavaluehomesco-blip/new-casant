@@ -1,7 +1,7 @@
 import { NavigationWrapper } from "@/components/navigation-wrapper"
 import { Footer } from "@/components/footer"
 import { AboutContent } from "@/components/about-content"
-import { getActiveTeamMembers, getCompanyInfo } from "@/lib/data/queries"
+import { getActiveTeamMembers, getActiveEmployees, getCompanyInfo, getActiveLifeAtCasantImages } from "@/lib/data/queries"
 
 export const metadata = {
   title: "About Us - Casant Events",
@@ -9,16 +9,23 @@ export const metadata = {
 }
 
 export default async function AboutPage() {
-  const [teamMembers, companyInfo, navigation] = await Promise.all([
+  const [teamMembers, employees, companyInfo, lifeAtCasantImages, navigation] = await Promise.all([
     getActiveTeamMembers(),
+    getActiveEmployees(),
     getCompanyInfo(),
+    getActiveLifeAtCasantImages(),
     NavigationWrapper({ variant: "dark" }),
   ])
 
   return (
     <main className="min-h-screen">
       {navigation}
-      <AboutContent teamMembers={teamMembers} companyInfo={companyInfo} />
+      <AboutContent
+        teamMembers={teamMembers}
+        employees={employees}
+        companyInfo={companyInfo}
+        lifeAtCasantImages={lifeAtCasantImages}
+      />
       <Footer companyInfo={companyInfo} />
     </main>
   )

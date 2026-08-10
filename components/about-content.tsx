@@ -5,7 +5,9 @@ import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { CheckCircle2 } from "lucide-react"
-import type { TeamMember, CompanyInfo } from "@/lib/data/types"
+import { TeamCarousel } from "@/components/team-carousel"
+import { LifeAtCasantTeaser } from "@/components/life-at-casant-teaser"
+import type { TeamMember, CompanyInfo, LifeAtCasantImage } from "@/lib/data/types"
 
 const defaultDirectors: TeamMember[] = [
   {
@@ -17,6 +19,7 @@ const defaultDirectors: TeamMember[] = [
     email: null,
     phone: null,
     linkedin: null,
+    member_type: "director" as const,
     display_order: 1,
     is_active: true,
     created_at: "",
@@ -31,6 +34,7 @@ const defaultDirectors: TeamMember[] = [
     email: null,
     phone: null,
     linkedin: null,
+    member_type: "director" as const,
     display_order: 2,
     is_active: true,
     created_at: "",
@@ -45,6 +49,7 @@ const defaultDirectors: TeamMember[] = [
     email: null,
     phone: null,
     linkedin: null,
+    member_type: "director" as const,
     display_order: 3,
     is_active: true,
     created_at: "",
@@ -54,10 +59,12 @@ const defaultDirectors: TeamMember[] = [
 
 interface AboutContentProps {
   teamMembers?: TeamMember[]
+  employees?: TeamMember[]
   companyInfo?: CompanyInfo | null
+  lifeAtCasantImages?: LifeAtCasantImage[]
 }
 
-export function AboutContent({ teamMembers, companyInfo }: AboutContentProps) {
+export function AboutContent({ teamMembers, employees, companyInfo, lifeAtCasantImages }: AboutContentProps) {
   const [isVisible, setIsVisible] = useState(false)
   const sectionRef = useRef<HTMLDivElement>(null)
 
@@ -255,6 +262,19 @@ export function AboutContent({ teamMembers, companyInfo }: AboutContentProps) {
           </div>
         </div>
       </section>
+
+      {/* Employees Carousel */}
+      {employees && employees.length > 0 && (
+        <TeamCarousel
+          members={employees}
+          eyebrow="Our People"
+          title="The Casant Team"
+          description="Every celebration is built by hands you rarely see. Meet the people behind our productions."
+        />
+      )}
+
+      {/* Life at Casant Teaser */}
+      <LifeAtCasantTeaser images={lifeAtCasantImages || []} />
 
       {/* CTA */}
       <section className="py-24 bg-primary">

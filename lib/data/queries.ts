@@ -17,6 +17,7 @@ import type {
   ServiceImage,
   Clientele,
   BlogPost,
+  LifeAtCasantImage,
 } from "./types"
 
 // Hero Slides
@@ -226,20 +227,60 @@ export const getInventoryByCategory = unstable_cache(
   { revalidate: 3600, tags: ["inventory"] }
 )
 
-// Team Members
+// Team Members — Directors (member_type may not exist until migration runs; falls back to all rows)
 async function _getActiveTeamMembers(): Promise<TeamMember[]> {
   const supabase = createUnauthenticatedClient()
   const { data, error } = await supabase
     .from("team_members")
-    .select("id, name, role, bio, image_url, email, phone, linkedin, display_order, is_active, created_at, updated_at")
+    .select(
+      "id, name, role, bio, image_url, email, phone, linkedin, member_type, display_order, is_active, created_at, updated_at",
+    )
     .eq("is_active", true)
+    .eq("member_type", "director")
     .order("display_order", { ascending: true })
-  if (error) { console.error("Error fetching team members:", error); return [] }
+  if (error) {
+    if (error.code === "42703" || error.message?.includes("member_type")) {
+      // member_type column not migrated yet — treat every active member as a director
+      const { data: fallbackData, error: fallbackError } = await supabase
+        .from("team_members")
+        .select("id, name, role, bio, image_url, email, phone, linkedin, display_order, is_active, created_at, updated_at")
+        .eq("is_active", true)
+        .order("display_order", { ascending: true })
+      if (fallbackError) { console.error("Error fetching team members:", fallbackError); return [] }
+      return (fallbackData || []).map((m) => ({ ...m, member_type: "director" })) as TeamMember[]
+    }
+    console.error("Error fetching team members:", error)
+    return []
+  }
   return (data || []) as TeamMember[]
 }
 export const getActiveTeamMembers = unstable_cache(
   _getActiveTeamMembers,
   ["team-members"],
+  { revalidate: 7200, tags: ["team-members"] }
+)
+
+// Team Members — Employees (returns [] until member_type migration runs)
+async function _getActiveEmployees(): Promise<TeamMember[]> {
+  const supabase = createUnauthenticatedClient()
+  const { data, error } = await supabase
+    .from("team_members")
+    .select(
+      "id, name, role, bio, image_url, email, phone, linkedin, member_type, display_order, is_active, created_at, updated_at",
+    )
+    .eq("is_active", true)
+    .eq("member_type", "employee")
+    .order("display_order", { ascending: true })
+  if (error) {
+    if (error.code === "42703" || error.message?.includes("member_type")) return []
+    console.error("Error fetching employees:", error)
+    return []
+  }
+  return (data || []) as TeamMember[]
+}
+export const getActiveEmployees = unstable_cache(
+  _getActiveEmployees,
+  ["team-employees"],
   { revalidate: 7200, tags: ["team-members"] }
 )
 
@@ -441,6 +482,27 @@ export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> 
   }
   return normalizeBlogPost(data)
 }
+
+// Life at Casant Gallery — table may not exist until SQL is run; returns [] safely
+async function _getActiveLifeAtCasantImages(): Promise<LifeAtCasantImage[]> {
+  const supabase = createUnauthenticatedClient()
+  const { data, error } = await supabase
+    .from("life_at_casant_images")
+    .select("id, image_url, caption, display_order, is_active, created_at, updated_at")
+    .eq("is_active", true)
+    .order("display_order", { ascending: true })
+  if (error) {
+    if (error.code === "PGRST205" || error.message?.includes("schema cache") || error.message?.includes("does not exist")) return []
+    console.error("Error fetching Life at Casant images:", error)
+    return []
+  }
+  return (data || []) as LifeAtCasantImage[]
+}
+export const getActiveLifeAtCasantImages = unstable_cache(
+  _getActiveLifeAtCasantImages,
+  ["life-at-casant-images"],
+  { revalidate: 3600, tags: ["life-at-casant-images"] }
+)
 
 // Service Images
 export async function getServiceImages(serviceId: string): Promise<ServiceImage[]> {
