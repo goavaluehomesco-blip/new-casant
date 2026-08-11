@@ -225,6 +225,17 @@ export interface Clientele {
   updated_at: string
 }
 
+export interface Partner {
+  id: string
+  name: string
+  image_url: string | null
+  website_url: string | null
+  is_active: boolean
+  display_order: number
+  created_at: string
+  updated_at: string
+}
+
 export type BlogContentBlock =
   | { type: "text"; value: string }
   | { type: "image"; url: string; caption?: string }
