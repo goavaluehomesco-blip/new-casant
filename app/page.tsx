@@ -7,6 +7,7 @@ import { FeaturedWork } from "@/components/featured-work"
 import { About } from "@/components/about"
 import { Testimonials } from "@/components/testimonials"
 import { Clientele } from "@/components/clientele"
+import { Partners } from "@/components/partners"
 import { InstagramCarousel } from "@/components/instagram-carousel"
 import { Contact } from "@/components/contact"
 import { JobOpenings } from "@/components/job-openings"
@@ -25,6 +26,7 @@ import {
   getActiveInstagramPosts,
   getActiveJobPostings,
   getActiveClientele,
+  getActivePartners,
   getFeaturedBlogPosts,
 } from "@/lib/data/queries"
 
@@ -32,7 +34,7 @@ export default async function Home() {
   const [
     heroSlides, services, teamMembers, companyInfo,
     featuredProjects, inventoryCategories, inventoryByCategory,
-    testimonials, instagramPosts, jobPostings, clientele, blogPosts, navigation,
+    testimonials, instagramPosts, jobPostings, clientele, partners, blogPosts, navigation,
   ] = await Promise.all([
     getActiveHeroSlides(),
     getActiveServices(),
@@ -45,6 +47,7 @@ export default async function Home() {
     getActiveInstagramPosts(),
     getActiveJobPostings(),
     getActiveClientele(),
+    getActivePartners(),
     getFeaturedBlogPosts(),
     NavigationWrapper({}),
   ])
@@ -60,6 +63,7 @@ export default async function Home() {
       <FeaturedWork projects={featuredProjects} />
       <Testimonials testimonials={testimonials} />
       <Clientele clients={clientele} />
+      <Partners partners={partners} />
       <InstagramCarousel posts={instagramPosts} companyInfo={companyInfo} />
       <About teamMembers={teamMembers} />
       <BlogSection posts={blogPosts} />

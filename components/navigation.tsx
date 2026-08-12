@@ -26,7 +26,8 @@ export function Navigation({ variant = "light", logoUrl }: NavigationProps) {
     { href: "/inventory", label: "Inventory" },
     { href: "/weddings", label: "Weddings" },
     { href: "/corporate", label: "Corporate" },
-    { href: "/about", label: "About Us" },
+    { href: "/blog", label: "Our blog" },
+    { href: "/life-at-casant", label: "life at casant" },
   ]
 
   const getTextColor = () => {
