@@ -13,6 +13,7 @@ export async function revalidateServices() {
 export async function revalidateCompanyInfo() {
   revalidatePath("/admin/settings", "page")
   revalidatePath("/", "layout")
+  revalidatePath("/life-at-casant", "page")
 }
 
 export async function revalidateGallery() {
