@@ -19,8 +19,19 @@ export default async function LifeAtCasantPage() {
     <main className="min-h-screen">
       {navigation}
 
-      <section className="relative pt-40 pb-20 bg-foreground">
-        <div className="container mx-auto px-6">
+      <section className="relative pt-40 pb-20 bg-foreground overflow-hidden">
+        {companyInfo?.life_at_casant_hero_image_url && (
+          <>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={companyInfo.life_at_casant_hero_image_url}
+              alt=""
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-foreground/70" />
+          </>
+        )}
+        <div className="container relative mx-auto px-6">
           <div className="max-w-2xl">
             <span className="text-primary font-medium tracking-wide text-sm uppercase">Behind The Scenes</span>
             <h1 className="text-5xl md:text-6xl font-bold text-background mt-4 mb-6 text-balance">

@@ -6,15 +6,22 @@ import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Plus, Pencil, Trash2, ImageIcon, ToggleLeft, ToggleRight } from "lucide-react"
+import { Plus, Pencil, Trash2, ImageIcon, ToggleLeft, ToggleRight, CheckCircle2 } from "lucide-react"
 import ImageUpload from "@/components/admin/image-upload"
+import { revalidateCompanyInfo } from "@/lib/actions/revalidate"
 import type { LifeAtCasantImage } from "@/lib/data/types"
 
 interface LifeAtCasantManagerProps {
   images: LifeAtCasantImage[]
+  companyInfoId?: string | null
+  heroImageUrl?: string | null
 }
 
-export default function LifeAtCasantManager({ images: initial }: LifeAtCasantManagerProps) {
+export default function LifeAtCasantManager({
+  images: initial,
+  companyInfoId = null,
+  heroImageUrl = null,
+}: LifeAtCasantManagerProps) {
   const [items, setItems] = useState<LifeAtCasantImage[]>(initial)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [editing, setEditing] = useState<LifeAtCasantImage | null>(null)
@@ -22,6 +29,38 @@ export default function LifeAtCasantManager({ images: initial }: LifeAtCasantMan
   const [error, setError] = useState<string | null>(null)
   const [form, setForm] = useState({ image_url: "", caption: "" })
   const supabase = createClient()
+
+  const [heroImage, setHeroImage] = useState(heroImageUrl || "")
+  const [savingHero, setSavingHero] = useState(false)
+  const [heroSaved, setHeroSaved] = useState(false)
+  const [heroError, setHeroError] = useState<string | null>(null)
+
+  const handleSaveHero = async (nextUrl: string) => {
+    setHeroImage(nextUrl)
+    setSavingHero(true)
+    setHeroError(null)
+    try {
+      if (companyInfoId) {
+        const { error } = await supabase
+          .from("company_info")
+          .update({ life_at_casant_hero_image_url: nextUrl, updated_at: new Date().toISOString() })
+          .eq("id", companyInfoId)
+        if (error) throw error
+      } else {
+        const { error } = await supabase
+          .from("company_info")
+          .insert([{ name: "Casant Events", life_at_casant_hero_image_url: nextUrl }])
+        if (error) throw error
+      }
+      await revalidateCompanyInfo()
+      setHeroSaved(true)
+      setTimeout(() => setHeroSaved(false), 3000)
+    } catch (err: unknown) {
+      setHeroError(err instanceof Error ? err.message : "Failed to save background image")
+    } finally {
+      setSavingHero(false)
+    }
+  }
 
   const openNew = () => {
     setEditing(null)
@@ -98,6 +137,30 @@ export default function LifeAtCasantManager({ images: initial }: LifeAtCasantMan
           <Plus className="w-4 h-4" />
           Add Photo
         </Button>
+      </div>
+
+      <div className="mb-10 bg-[#161616] border border-white/10 rounded-xl p-6">
+        <div className="flex items-center justify-between mb-1">
+          <h2 className="text-base font-semibold text-white">Page Background Image</h2>
+          {heroSaved && (
+            <span className="flex items-center gap-1.5 text-xs text-green-400">
+              <CheckCircle2 className="w-3.5 h-3.5" />
+              Saved
+            </span>
+          )}
+        </div>
+        <p className="text-xs text-white/40 mb-4">
+          The banner image shown behind the &quot;Life at Casant&quot; heading at the top of the page.
+        </p>
+        <ImageUpload
+          value={heroImage}
+          onChange={handleSaveHero}
+          folder="life-at-casant"
+          aspectRatio="video"
+          label="Upload background photo"
+        />
+        {savingHero && <p className="text-xs text-white/40 mt-2">Saving...</p>}
+        {heroError && <p className="text-sm text-red-500 mt-2">{heroError}</p>}
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">

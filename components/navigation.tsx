@@ -23,11 +23,12 @@ export function Navigation({ variant = "light", logoUrl }: NavigationProps) {
   }, [])
 
   const navLinks = [
+    { href: "/life-at-casant", label: "Life at Casant" },
     { href: "/inventory", label: "Inventory" },
     { href: "/weddings", label: "Weddings" },
     { href: "/corporate", label: "Corporate" },
-    { href: "/blog", label: "Our blog" },
-    { href: "/life-at-casant", label: "life at casant" },
+    { href: "/about", label: "About Us" },
+    { href: "/blog", label: "Blogs" },
   ]
 
   const getTextColor = () => {
@@ -48,9 +49,13 @@ export function Navigation({ variant = "light", logoUrl }: NavigationProps) {
       <div className="container mx-auto px-6">
         {/* Desktop: 3-column grid — left links | centered logo | right links */}
         <div className="hidden md:grid grid-cols-[1fr_auto_1fr] items-center">
-          {/* Left: Inventory + Weddings — right-aligned toward logo */}
+          {/* Left: Life at Casant + Inventory + Weddings — right-aligned toward logo */}
           <div className="flex items-center justify-end gap-6 pr-6">
-            {[{ href: "/inventory", label: "Inventory" }, { href: "/weddings", label: "Weddings" }].map((link) => (
+            {[
+              { href: "/life-at-casant", label: "Life at Casant" },
+              { href: "/inventory", label: "Inventory" },
+              { href: "/weddings", label: "Weddings" },
+            ].map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
@@ -75,9 +80,13 @@ export function Navigation({ variant = "light", logoUrl }: NavigationProps) {
             </Link>
           </div>
 
-          {/* Right: Corporate + About Us — left-aligned toward logo */}
+          {/* Right: Corporate + About Us + Blogs — left-aligned toward logo */}
           <div className="flex items-center justify-start gap-6 pl-6">
-            {[{ href: "/corporate", label: "Corporate" }, { href: "/about", label: "About Us" }].map((link) => (
+            {[
+              { href: "/corporate", label: "Corporate" },
+              { href: "/about", label: "About Us" },
+              { href: "/blog", label: "Blogs" },
+            ].map((link) => (
               <Link
                 key={link.href}
                 href={link.href}

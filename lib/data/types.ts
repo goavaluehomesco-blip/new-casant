@@ -135,6 +135,7 @@ export interface CompanyInfo {
   about_hero_image_url: string | null
   about_story_image_url: string | null
   careers_hero_image_url: string | null
+  life_at_casant_hero_image_url: string | null
   maintenance_mode: boolean
   created_at: string
   updated_at: string
