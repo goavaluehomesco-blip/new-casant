@@ -9,7 +9,7 @@ function PartnerCard({ partner }: { partner: Partner }) {
         <img
           src={partner.image_url || "/placeholder.svg"}
           alt={partner.name}
-          className="max-h-14 max-w-[160px] w-auto object-contain opacity-80 grayscale group-hover:opacity-100 group-hover:grayscale-0 transition-all duration-300"
+          className="max-h-14 max-w-[160px] w-auto object-contain transition-transform duration-300 group-hover:scale-105"
         />
       ) : (
         <span className="text-base font-semibold text-white/60 group-hover:text-white transition-colors duration-300 tracking-wide text-center leading-tight">
