@@ -13,7 +13,7 @@ function ClientCard({ client }: { client: Clientele }) {
         <img
           src={client.image_url || "/placeholder.svg"}
           alt={client.name}
-          className="max-h-10 max-w-[120px] w-auto object-contain opacity-70 grayscale group-hover:opacity-100 group-hover:grayscale-0 transition-all duration-300"
+          className="max-h-10 max-w-[120px] w-auto object-contain transition-transform duration-300 group-hover:scale-105"
         />
       ) : (
         <span className="text-sm font-semibold text-white/50 group-hover:text-white/90 transition-colors duration-300 tracking-wide text-center leading-tight">
